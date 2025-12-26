@@ -18,10 +18,9 @@ export function createApp(prisma: PrismaClient): { app: express.Application; con
     allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Session-Id', 'Authorization'],
     exposedHeaders: ['X-Session-Id'],
     credentials: false,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   }));
-
-  // Handle preflight requests explicitly
-  app.options('*', cors());
 
   app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
