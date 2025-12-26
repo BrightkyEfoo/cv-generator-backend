@@ -26,6 +26,7 @@ export function createCVRoutes(controller: CVController): Router {
   router.patch('/:id/customization', asyncHandler((req, res) => controller.updateCustomization(req, res)));
 
   router.get('/:id/preview', asyncHandler((req, res) => controller.preview(req, res)));
+  router.get('/:id/preview-image', asyncHandler((req, res) => controller.previewImage(req, res)));
   router.get('/:id/download', asyncHandler((req, res) => controller.download(req, res)));
 
   return router;

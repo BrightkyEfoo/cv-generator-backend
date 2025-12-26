@@ -185,6 +185,13 @@ export class CVController {
     res.send(pdf);
   }
 
+  async previewImage(req: Request, res: Response): Promise<void> {
+    const image = await this.exportCVUseCase.generatePreviewImage(req.params.id);
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.send(image);
+  }
+
   async download(req: Request, res: Response): Promise<void> {
     const pdf = await this.exportCVUseCase.generateDownload(req.params.id);
     res.setHeader('Content-Type', 'application/pdf');

@@ -42,6 +42,106 @@ export class PuppeteerPDFService implements IPDFService {
     return this.generatePDF(cv, true);
   }
 
+  async generatePreviewImage(cv: CV): Promise<Buffer> {
+    const browser = await this.getBrowser();
+    const page = await browser.newPage();
+
+    try {
+      const edgeCode = await this.getEdgeCode(cv.customization.templateId);
+
+      let html: string;
+
+      if (edgeCode) {
+        const templateData = this.cvToTemplateData(cv);
+        html = await this.edgeRenderer.renderFromString(edgeCode, templateData);
+      } else {
+        html = this.createFallbackHTML(cv);
+      }
+
+      // Add watermark for preview
+      html = this.addImageWatermark(html);
+
+      // Set viewport to A4 size (595 x 842 pixels at 72 DPI)
+      await page.setViewport({ width: 595, height: 842 });
+      await page.setContent(html, { waitUntil: 'networkidle0' });
+
+      const screenshot = await page.screenshot({
+        type: 'png',
+        fullPage: false,
+        clip: { x: 0, y: 0, width: 595, height: 842 },
+      });
+
+      return Buffer.from(screenshot);
+    } finally {
+      await page.close();
+    }
+  }
+
+  private addImageWatermark(html: string): string {
+    const watermarkStyle = `
+      <style>
+        .preview-watermark {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          pointer-events: none;
+          z-index: 10000;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          align-items: center;
+          overflow: hidden;
+        }
+        .watermark-row {
+          display: flex;
+          justify-content: space-around;
+          width: 150%;
+          transform: rotate(-30deg);
+        }
+        .watermark-text {
+          font-size: 24px;
+          color: rgba(150, 150, 150, 0.25);
+          font-weight: bold;
+          white-space: nowrap;
+          font-family: Arial, sans-serif;
+          text-transform: uppercase;
+          letter-spacing: 4px;
+        }
+      </style>
+      <div class="preview-watermark">
+        <div class="watermark-row">
+          <span class="watermark-text">APERÇU</span>
+          <span class="watermark-text">APERÇU</span>
+          <span class="watermark-text">APERÇU</span>
+        </div>
+        <div class="watermark-row">
+          <span class="watermark-text">APERÇU</span>
+          <span class="watermark-text">APERÇU</span>
+          <span class="watermark-text">APERÇU</span>
+        </div>
+        <div class="watermark-row">
+          <span class="watermark-text">APERÇU</span>
+          <span class="watermark-text">APERÇU</span>
+          <span class="watermark-text">APERÇU</span>
+        </div>
+        <div class="watermark-row">
+          <span class="watermark-text">APERÇU</span>
+          <span class="watermark-text">APERÇU</span>
+          <span class="watermark-text">APERÇU</span>
+        </div>
+        <div class="watermark-row">
+          <span class="watermark-text">APERÇU</span>
+          <span class="watermark-text">APERÇU</span>
+          <span class="watermark-text">APERÇU</span>
+        </div>
+      </div>
+    `;
+
+    return html.replace('</body>', `${watermarkStyle}</body>`);
+  }
+
   private cvToTemplateData(cv: CV): TemplateData {
     return {
       personalInfo: cv.personalInfo,

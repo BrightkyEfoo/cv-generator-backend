@@ -16,6 +16,14 @@ export class ExportCVUseCase {
     return this.pdfService.generateWithWatermark(cv);
   }
 
+  async generatePreviewImage(cvId: string): Promise<Buffer> {
+    const cv = await this.cvRepository.findById(cvId);
+    if (!cv) {
+      throw new NotFoundError('CV', cvId);
+    }
+    return this.pdfService.generatePreviewImage(cv);
+  }
+
   async generateDownload(cvId: string): Promise<Buffer> {
     const cv = await this.cvRepository.findById(cvId);
     if (!cv) {
