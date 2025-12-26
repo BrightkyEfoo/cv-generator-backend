@@ -194,59 +194,59 @@
 <body>
   <div class="cv-container">
     <div class="sidebar">
-      {{#if personalInfo.photoUrl}}
+      @if(personalInfo.photoUrl)
       <div class="photo-container">
         <img src="{{personalInfo.photoUrl}}" alt="Photo" class="photo">
       </div>
-      {{/if}}
+      @endif
 
       <div class="sidebar-section">
         <h2 class="sidebar-section-title">Contact</h2>
-        {{#if personalInfo.address}}
+        @if(personalInfo.address)
         <div class="contact-item">
           <div class="contact-label">Address:</div>
           <div class="contact-value">{{personalInfo.address}}, {{personalInfo.city}}, {{personalInfo.country}}</div>
         </div>
-        {{/if}}
-        {{#if personalInfo.email}}
+        @endif
+        @if(personalInfo.email)
         <div class="contact-item">
           <div class="contact-label">Email:</div>
           <div class="contact-value">{{personalInfo.email}}</div>
         </div>
-        {{/if}}
-        {{#if personalInfo.phone}}
+        @endif
+        @if(personalInfo.phone)
         <div class="contact-item">
           <div class="contact-label">Phone:</div>
           <div class="contact-value">{{personalInfo.phone}}</div>
         </div>
-        {{/if}}
-        {{#each personalInfo.socialLinks}}
+        @endif
+        @each(link in personalInfo.socialLinks)
         <div class="contact-item">
-          <div class="contact-label">{{this.platform}}:</div>
-          <div class="contact-value">{{this.label}}</div>
+          <div class="contact-label">{{link.platform}}:</div>
+          <div class="contact-value">{{link.label}}</div>
         </div>
-        {{/each}}
+        @endeach
       </div>
 
       <div class="sidebar-section">
         <h2 class="sidebar-section-title">Skills</h2>
-        {{#each skills}}
-        <div class="skill-item">{{this.name}}</div>
-        {{/each}}
+        @each(skill in skills)
+        <div class="skill-item">{{skill.name}}</div>
+        @endeach
       </div>
 
-      {{#if references.length}}
+      @if(references.length)
       <div class="sidebar-section">
         <h2 class="sidebar-section-title">Reference</h2>
-        {{#each references}}
+        @each(ref in references)
         <div class="reference-item">
-          <div class="reference-name">{{this.name}}</div>
-          <div class="reference-title">{{this.title}}, {{this.company}}</div>
-          <div class="reference-contact">{{this.email}}</div>
+          <div class="reference-name">{{ref.name}}</div>
+          <div class="reference-title">{{ref.title}}, {{ref.company}}</div>
+          <div class="reference-contact">{{ref.email}}</div>
         </div>
-        {{/each}}
+        @endeach
       </div>
-      {{/if}}
+      @endif
     </div>
 
     <div class="main-content">
@@ -255,34 +255,34 @@
         <div class="title">{{personalInfo.title}}</div>
       </div>
 
-      {{#if education.length}}
+      @if(education.length)
       <div class="section">
         <h2 class="section-title">Education</h2>
-        {{#each education}}
+        @each(edu in education)
         <div class="education-item">
-          <div class="item-title">{{this.degree}} ({{this.endDate}})</div>
-          <div class="item-subtitle">{{this.institution}}</div>
+          <div class="item-title">{{edu.degree}} ({{edu.endDate}})</div>
+          <div class="item-subtitle">{{edu.institution}}</div>
         </div>
-        {{/each}}
+        @endeach
       </div>
-      {{/if}}
+      @endif
 
-      {{#if experiences.length}}
+      @if(experiences.length)
       <div class="section">
         <h2 class="section-title">Work Experience</h2>
-        {{#each experiences}}
+        @each(exp in experiences)
         <div class="experience-item">
-          <div class="item-title">{{this.jobTitle}} at {{this.company}}</div>
-          <div class="item-date">{{this.startDate}} - {{#if this.current}}Current{{else}}{{this.endDate}}{{/if}}</div>
+          <div class="item-title">{{exp.jobTitle}} at {{exp.company}}</div>
+          <div class="item-date">{{exp.startDate}} - @if(exp.current)Current@else{{exp.endDate}}@endif</div>
           <ul class="item-achievements">
-            {{#each this.achievements}}
-            <li>{{this}}</li>
-            {{/each}}
+            @each(achievement in exp.achievements)
+            <li>{{achievement}}</li>
+            @endeach
           </ul>
         </div>
-        {{/each}}
+        @endeach
       </div>
-      {{/if}}
+      @endif
     </div>
   </div>
 </body>

@@ -1,5 +1,5 @@
 import type { CV } from '../../../domain/entities/index.js';
-import type { ICVRepository, ITemplateRepository } from '../../../domain/interfaces/index.js';
+import type { ICVRepository, ITemplateRepository, ITemplatePreviewGenerator } from '../../../domain/interfaces/index.js';
 import type { CreateCVDto } from '../../dtos/index.js';
 import { NotFoundError } from '../../../shared/errors/index.js';
 import { generateCvId } from '../../../shared/utils/index.js';
@@ -7,7 +7,8 @@ import { generateCvId } from '../../../shared/utils/index.js';
 export class CreateCVUseCase {
   constructor(
     private readonly cvRepository: ICVRepository,
-    private readonly templateRepository: ITemplateRepository
+    private readonly templateRepository: ITemplateRepository,
+    private readonly previewGenerator?: ITemplatePreviewGenerator
   ) {}
 
   async execute(dto: CreateCVDto): Promise<CV> {
@@ -15,6 +16,11 @@ export class CreateCVUseCase {
     if (!template) {
       throw new NotFoundError('Template', dto.templateId);
     }
+
+    // Generate template preview if missing (don't await to avoid blocking)
+    this.ensureTemplatePreview(dto.templateId, template).catch((err) => {
+      console.error('Background preview generation failed:', err);
+    });
 
     const now = new Date();
     const cv: CV = {
@@ -90,5 +96,48 @@ export class CreateCVUseCase {
     };
 
     return this.cvRepository.create(cv);
+  }
+
+  private async ensureTemplatePreview(
+    templateId: string,
+    template: { previewUrl?: string; defaultColors: Record<string, string> }
+  ): Promise<void> {
+    // Skip if preview generator not available or template already has preview
+    if (!this.previewGenerator || template.previewUrl) {
+      return;
+    }
+
+    try {
+      // Get edge code for the template
+      const edgeCode = await this.templateRepository.getEdgeCode(templateId);
+      if (!edgeCode) {
+        console.warn(`No edge code found for template: ${templateId}`);
+        return;
+      }
+
+      // Extract template name from ID (e.g., "template-corporate-red" -> "corporate-red")
+      const templateName = templateId.replace('template-', '');
+
+      // Generate preview
+      console.log(`Generating preview for template: ${templateName}`);
+      const result = await this.previewGenerator.generatePreviewFromEdgeCode(
+        edgeCode,
+        templateName,
+        template.defaultColors
+      );
+
+      if (result.success) {
+        // Update template with preview URL
+        await this.templateRepository.update(templateId, {
+          previewUrl: result.previewPath,
+        });
+        console.log(`Preview generated and saved: ${result.previewPath}`);
+      } else {
+        console.error(`Failed to generate preview for ${templateName}: ${result.error}`);
+      }
+    } catch (error) {
+      // Log but don't fail the request
+      console.error('Error ensuring template preview:', error);
+    }
   }
 }

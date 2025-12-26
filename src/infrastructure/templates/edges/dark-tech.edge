@@ -222,86 +222,86 @@
     <div class="top-section">
       <div class="experience-col">
         <h2 class="section-title">Experience</h2>
-        {{#each experiences}}
+        @each(exp in experiences)
         <div class="timeline-item">
-          <div class="timeline-date">{{this.startDate}} - {{#if this.current}}Present{{else}}{{this.endDate}}{{/if}}</div>
-          <div class="timeline-title">{{this.jobTitle}}</div>
-          <div class="timeline-desc">{{this.company}}<br>{{this.description}}</div>
+          <div class="timeline-date">{{exp.startDate}} - @if(exp.current)Present@else{{exp.endDate}}@endif</div>
+          <div class="timeline-title">{{exp.jobTitle}}</div>
+          <div class="timeline-desc">{{exp.company}}<br>{{exp.description}}</div>
         </div>
-        {{/each}}
+        @endeach
       </div>
 
       <div class="center-col">
-        {{#if personalInfo.photoUrl}}
+        @if(personalInfo.photoUrl)
         <div class="photo-container">
           <img src="{{personalInfo.photoUrl}}" alt="Photo" class="photo">
         </div>
-        {{/if}}
+        @endif
         <p class="summary">{{summary}}</p>
       </div>
 
       <div class="contact-col">
         <h2 class="section-title">Contact</h2>
-        {{#if personalInfo.address}}
+        @if(personalInfo.address)
         <div class="contact-item">
           {{personalInfo.city}}, {{personalInfo.country}}
           <span class="contact-icon">A</span>
         </div>
-        {{/if}}
-        {{#if personalInfo.email}}
+        @endif
+        @if(personalInfo.email)
         <div class="contact-item">
           {{personalInfo.email}}
           <span class="contact-icon">@</span>
         </div>
-        {{/if}}
-        {{#if personalInfo.phone}}
+        @endif
+        @if(personalInfo.phone)
         <div class="contact-item">
           {{personalInfo.phone}}
           <span class="contact-icon">T</span>
         </div>
-        {{/if}}
-        {{#each personalInfo.socialLinks}}
+        @endif
+        @each(link in personalInfo.socialLinks)
         <div class="contact-item">
-          {{this.label}}
-          <span class="contact-icon">{{this.platform.[0]}}</span>
+          {{link.label}}
+          <span class="contact-icon">{{link.platform[0]}}</span>
         </div>
-        {{/each}}
+        @endeach
       </div>
     </div>
 
     <div class="bottom-section">
       <div class="bottom-col">
         <h2 class="section-title">Formation</h2>
-        {{#each education}}
+        @each(edu in education)
         <div class="timeline-item">
-          <div class="timeline-date">{{this.startDate}} - {{this.endDate}}</div>
-          <div class="timeline-title">{{this.degree}}</div>
-          <div class="timeline-desc">{{this.institution}}<br>{{this.field}}</div>
+          <div class="timeline-date">{{edu.startDate}} - {{edu.endDate}}</div>
+          <div class="timeline-title">{{edu.degree}}</div>
+          <div class="timeline-desc">{{edu.institution}}<br>{{edu.field}}</div>
         </div>
-        {{/each}}
+        @endeach
       </div>
 
       <div class="bottom-col">
         <h2 class="section-title">Atouts</h2>
-        {{#each interests}}
+        @each(interest in interests)
         <div class="atout-item">
-          <div class="atout-title">{{this.name}}</div>
-          <div class="atout-desc">{{this.description}}</div>
+          <div class="atout-title">{{interest.name}}</div>
+          <div class="atout-desc">{{interest.description}}</div>
         </div>
-        {{/each}}
+        @endeach
       </div>
 
       <div class="bottom-col">
         <h2 class="section-title">Competences</h2>
         <div class="competence-grid">
-          {{#each skills}}
+          @each(skill in skills)
           <div class="competence-item">
-            <span class="competence-name">{{this.name}}</span>
-            {{#if this.category}}
-            <span class="competence-sub">{{this.category}}</span>
-            {{/if}}
+            <span class="competence-name">{{skill.name}}</span>
+            @if(skill.category)
+            <span class="competence-sub">{{skill.category}}</span>
+            @endif
           </div>
-          {{/each}}
+          @endeach
         </div>
       </div>
     </div>

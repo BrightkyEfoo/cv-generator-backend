@@ -32,7 +32,7 @@ export function createContainer(prisma: PrismaClient): Container {
   const fileStorageService = new LocalFileStorageService('./uploads', '/api/uploads');
   const previewGenerator = new TemplatePreviewGenerator('./public/previews');
 
-  const createCVUseCase = new CreateCVUseCase(cvRepository, templateRepository);
+  const createCVUseCase = new CreateCVUseCase(cvRepository, templateRepository, previewGenerator);
   const updateCVUseCase = new UpdateCVUseCase(cvRepository);
   const getCVUseCase = new GetCVUseCase(cvRepository, templateRepository, previewGenerator);
   const exportCVUseCase = new ExportCVUseCase(cvRepository, pdfService);
