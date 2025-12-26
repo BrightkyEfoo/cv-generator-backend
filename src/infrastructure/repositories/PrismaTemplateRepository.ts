@@ -12,7 +12,7 @@ export class PrismaTemplateRepository implements ITemplateRepository {
       description: prismaTemplate.description,
       previewUrl: prismaTemplate.previewUrl || '',
       category: prismaTemplate.category as Template['category'],
-      features: prismaTemplate.features as Template['features'],
+      features: prismaTemplate.features as unknown as Template['features'],
       defaultColors: prismaTemplate.defaultColors as Template['defaultColors'],
       availableFonts: prismaTemplate.availableFonts,
       isActive: prismaTemplate.isActive,

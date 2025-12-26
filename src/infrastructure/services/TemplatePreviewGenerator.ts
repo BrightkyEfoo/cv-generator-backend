@@ -53,26 +53,26 @@ export class TemplatePreviewGenerator {
   private createTemplateData(): TemplateData {
     return {
       ...mockCVData,
-      colors: defaultTemplateColors,
+      colors: {
+        ...defaultTemplateColors,
+        dividers: '#e0e0e0',
+      },
       typography: {
-        ...defaultTypography,
         bodyFont: defaultTypography.fontFamily,
         headingFont: defaultTypography.headingFont,
+        bodySize: defaultTypography.bodySize,
+        headingSize: defaultTypography.headingSize,
+        lineHeight: defaultTypography.lineHeight,
+        letterSpacing: 0,
       },
       layout: {
-        columns: 1,
+        sections: [],
+        sidebarSections: [],
+        hasSidebar: true,
         sidebarPosition: 'left',
         headerStyle: 'centered',
-        sectionOrder: [
-          'summary',
-          'experience',
-          'education',
-          'skills',
-          'languages',
-          'certifications',
-          'projects',
-          'awards',
-        ],
+        dateFormat: 'MMM YYYY',
+        showPageNumbers: false,
       },
       spacing: {
         sectionGap: 20,
