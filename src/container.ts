@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 import { PrismaCVRepository, PrismaTemplateRepository, PrismaPaymentRepository, PrismaAdminRepository } from './infrastructure/repositories/index.js';
-import { StripePaymentService, PuppeteerPDFService, LocalFileStorageService } from './infrastructure/services/index.js';
+import { StripePaymentService, PuppeteerPDFService, LocalFileStorageService, TemplatePreviewGenerator } from './infrastructure/services/index.js';
 import { CreateCVUseCase, UpdateCVUseCase, GetCVUseCase, ExportCVUseCase, GetTemplatesUseCase, CreatePaymentUseCase, HandlePaymentWebhookUseCase, AdminAuthUseCase, ManageTemplatesUseCase } from './application/use-cases/index.js';
 import { CVController, TemplateController, PaymentController, UploadController, AdminController } from './presentation/controllers/index.js';
 
@@ -12,6 +12,7 @@ export interface Container {
   adminController: AdminController;
   adminAuthUseCase: AdminAuthUseCase;
   closePDFService: () => Promise<void>;
+  closePreviewGenerator: () => Promise<void>;
 }
 
 export function createContainer(prisma: PrismaClient): Container {
@@ -29,10 +30,11 @@ export function createContainer(prisma: PrismaClient): Container {
     return templateRepository.getEdgeCode(templateId);
   });
   const fileStorageService = new LocalFileStorageService('./uploads', '/api/uploads');
+  const previewGenerator = new TemplatePreviewGenerator('./public/previews');
 
   const createCVUseCase = new CreateCVUseCase(cvRepository, templateRepository);
   const updateCVUseCase = new UpdateCVUseCase(cvRepository);
-  const getCVUseCase = new GetCVUseCase(cvRepository);
+  const getCVUseCase = new GetCVUseCase(cvRepository, templateRepository, previewGenerator);
   const exportCVUseCase = new ExportCVUseCase(cvRepository, pdfService);
   const getTemplatesUseCase = new GetTemplatesUseCase(templateRepository);
   const createPaymentUseCase = new CreatePaymentUseCase(cvRepository, paymentRepository, paymentService);
@@ -55,5 +57,6 @@ export function createContainer(prisma: PrismaClient): Container {
     adminController,
     adminAuthUseCase,
     closePDFService: () => pdfService.closeBrowser(),
+    closePreviewGenerator: () => previewGenerator.closeBrowser(),
   };
 }

@@ -18,6 +18,7 @@ async function main() {
     console.log('Shutting down...');
     server.close();
     await container.closePDFService();
+    await container.closePreviewGenerator();
     await disconnectDatabase();
     process.exit(0);
   };
