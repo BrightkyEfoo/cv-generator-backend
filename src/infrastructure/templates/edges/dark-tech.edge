@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: {{typography.bodySize}}pt;
+      line-height: {{typography.lineHeight}};
+      background: #1a2634;
+      color: #ffffff;
+      min-height: 100vh;
+      padding: 40px;
+    }
+
+    .cv-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .name {
+      font-size: 32pt;
+      font-weight: 300;
+      color: #ffffff;
+      letter-spacing: 8px;
+    }
+
+    .name strong {
+      font-weight: 700;
+    }
+
+    .title {
+      font-size: 11pt;
+      letter-spacing: 4px;
+      color: {{colors.primary}};
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    .top-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 40px;
+    }
+
+    .experience-col {
+      width: 30%;
+    }
+
+    .center-col {
+      width: 35%;
+      text-align: center;
+    }
+
+    .contact-col {
+      width: 30%;
+      text-align: right;
+    }
+
+    .section-title {
+      font-size: 11pt;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    .photo-container {
+      margin-bottom: 20px;
+    }
+
+    .photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid {{colors.primary}};
+      object-fit: cover;
+      background: #2a3a4a;
+    }
+
+    .summary {
+      font-size: 9pt;
+      color: #aabbcc;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 15px;
+      margin-bottom: 20px;
+    }
+
+    .timeline-date {
+      font-size: 9pt;
+      color: {{colors.primary}};
+      font-weight: 700;
+    }
+
+    .timeline-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 3px;
+    }
+
+    .timeline-desc {
+      font-size: 8pt;
+      color: #8899aa;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+      font-size: 9pt;
+      color: #aabbcc;
+    }
+
+    .contact-icon {
+      width: 20px;
+      height: 20px;
+      border: 1px solid {{colors.primary}};
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+      font-size: 10px;
+      color: {{colors.primary}};
+    }
+
+    .desk-illustration {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 30px 0;
+      padding: 20px;
+    }
+
+    .desk-svg {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+    }
+
+    .bottom-section {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 40px;
+    }
+
+    .bottom-col {
+      width: 30%;
+    }
+
+    .atout-item {
+      margin-bottom: 15px;
+    }
+
+    .atout-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: {{colors.primary}};
+    }
+
+    .atout-desc {
+      font-size: 8pt;
+      color: #8899aa;
+      margin-top: 3px;
+    }
+
+    .competence-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .competence-item {
+      width: 80px;
+      height: 80px;
+      border: 2px solid {{colors.primary}};
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .competence-name {
+      font-size: 8pt;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .competence-sub {
+      font-size: 7pt;
+      color: #8899aa;
+    }
+  </style>
+</head>
+<body>
+  <div class="cv-container">
+    <div class="header">
+      <h1 class="name">{{personalInfo.firstName}} <strong>{{personalInfo.lastName}}</strong></h1>
+      <div class="title">{{personalInfo.title}}</div>
+    </div>
+
+    <div class="top-section">
+      <div class="experience-col">
+        <h2 class="section-title">Experience</h2>
+        {{#each experiences}}
+        <div class="timeline-item">
+          <div class="timeline-date">{{this.startDate}} - {{#if this.current}}Present{{else}}{{this.endDate}}{{/if}}</div>
+          <div class="timeline-title">{{this.jobTitle}}</div>
+          <div class="timeline-desc">{{this.company}}<br>{{this.description}}</div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="center-col">
+        {{#if personalInfo.photoUrl}}
+        <div class="photo-container">
+          <img src="{{personalInfo.photoUrl}}" alt="Photo" class="photo">
+        </div>
+        {{/if}}
+        <p class="summary">{{summary}}</p>
+      </div>
+
+      <div class="contact-col">
+        <h2 class="section-title">Contact</h2>
+        {{#if personalInfo.address}}
+        <div class="contact-item">
+          {{personalInfo.city}}, {{personalInfo.country}}
+          <span class="contact-icon">A</span>
+        </div>
+        {{/if}}
+        {{#if personalInfo.email}}
+        <div class="contact-item">
+          {{personalInfo.email}}
+          <span class="contact-icon">@</span>
+        </div>
+        {{/if}}
+        {{#if personalInfo.phone}}
+        <div class="contact-item">
+          {{personalInfo.phone}}
+          <span class="contact-icon">T</span>
+        </div>
+        {{/if}}
+        {{#each personalInfo.socialLinks}}
+        <div class="contact-item">
+          {{this.label}}
+          <span class="contact-icon">{{this.platform.[0]}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="bottom-section">
+      <div class="bottom-col">
+        <h2 class="section-title">Formation</h2>
+        {{#each education}}
+        <div class="timeline-item">
+          <div class="timeline-date">{{this.startDate}} - {{this.endDate}}</div>
+          <div class="timeline-title">{{this.degree}}</div>
+          <div class="timeline-desc">{{this.institution}}<br>{{this.field}}</div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="bottom-col">
+        <h2 class="section-title">Atouts</h2>
+        {{#each interests}}
+        <div class="atout-item">
+          <div class="atout-title">{{this.name}}</div>
+          <div class="atout-desc">{{this.description}}</div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="bottom-col">
+        <h2 class="section-title">Competences</h2>
+        <div class="competence-grid">
+          {{#each skills}}
+          <div class="competence-item">
+            <span class="competence-name">{{this.name}}</span>
+            {{#if this.category}}
+            <span class="competence-sub">{{this.category}}</span>
+            {{/if}}
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

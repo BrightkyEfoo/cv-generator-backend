@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: {{ typography.bodySize }}pt;
+      line-height: {{ typography.lineHeight }};
+      background: {{ colors.background }};
+      color: {{ colors.text }};
+    }
+
+    .cv-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 35%;
+      background: #f5f5f5;
+      padding: 0;
+    }
+
+    .main-content {
+      width: 65%;
+      padding: 30px 40px;
+      background: {{ colors.background }};
+    }
+
+    .photo-container {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .sidebar-section {
+      padding: 20px 25px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .sidebar-section:last-child {
+      border-bottom: none;
+    }
+
+    .sidebar-title {
+      font-size: 12pt;
+      font-weight: 700;
+      color: {{ colors.primary }};
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 9pt;
+      color: #333;
+    }
+
+    .contact-icon {
+      width: 20px;
+      margin-right: 10px;
+      color: {{ colors.primary }};
+      font-size: 12pt;
+    }
+
+    .software-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px;
+      position: relative;
+    }
+
+    .software-item {
+      width: 70px;
+      height: 70px;
+      border: 3px solid {{ colors.primary }};
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8pt;
+      font-weight: 600;
+      color: #333;
+      position: relative;
+    }
+
+    .software-item:nth-child(2) {
+      margin-top: 30px;
+    }
+
+    .software-item:nth-child(3) {
+      margin-top: -20px;
+    }
+
+    .software-item:nth-child(4) {
+      margin-top: 30px;
+    }
+
+    .language-item {
+      margin-bottom: 12px;
+    }
+
+    .language-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .language-name {
+      font-size: 9pt;
+      color: #333;
+    }
+
+    .language-level {
+      font-size: 9pt;
+      color: {{ colors.primary }};
+    }
+
+    .language-bar {
+      height: 4px;
+      background: #ddd;
+      border-radius: 2px;
+    }
+
+    .language-progress {
+      height: 100%;
+      background: {{ colors.primary }};
+      border-radius: 2px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #eee;
+    }
+
+    .name {
+      font-size: 28pt;
+      font-weight: 700;
+      color: {{ colors.primary }};
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .title {
+      font-size: 11pt;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .section {
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      font-size: 12pt;
+      font-weight: 700;
+      color: {{ colors.text }};
+      text-align: center;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid {{ colors.primary }};
+    }
+
+    .summary-text {
+      font-size: 9pt;
+      color: {{ colors.text }};
+      line-height: 1.6;
+      text-align: justify;
+    }
+
+    .experience-item {
+      margin-bottom: 18px;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .exp-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: {{ colors.primary }};
+      text-transform: uppercase;
+    }
+
+    .exp-date {
+      font-size: 8pt;
+      color: #888;
+    }
+
+    .exp-company {
+      font-size: 9pt;
+      font-style: italic;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .exp-achievements {
+      margin-top: 8px;
+      padding-left: 15px;
+    }
+
+    .exp-achievements li {
+      font-size: 8pt;
+      color: {{ colors.text }};
+      margin-bottom: 4px;
+      line-height: 1.5;
+    }
+
+    .education-item {
+      margin-bottom: 15px;
+    }
+
+    .edu-header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .edu-degree {
+      font-size: 10pt;
+      font-weight: 700;
+      color: {{ colors.primary }};
+      text-transform: uppercase;
+    }
+
+    .edu-date {
+      font-size: 8pt;
+      color: #888;
+    }
+
+    .edu-school {
+      font-size: 9pt;
+      font-style: italic;
+      color: #666;
+    }
+
+    .edu-details {
+      font-size: 8pt;
+      color: {{ colors.text }};
+      margin-top: 3px;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .qualities-list, .interests-list {
+      padding-left: 15px;
+    }
+
+    .qualities-list li, .interests-list li {
+      font-size: 9pt;
+      color: {{ colors.text }};
+      margin-bottom: 5px;
+    }
+
+    .qualities-list li::marker, .interests-list li::marker {
+      color: {{ colors.primary }};
+    }
+  </style>
+</head>
+<body>
+  <div class="cv-container">
+    <div class="sidebar">
+      @if(personalInfo.photoUrl)
+      <div class="photo-container">
+        <img src="{{ personalInfo.photoUrl }}" alt="Photo" class="photo">
+      </div>
+      @endif
+
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Contact</h2>
+        @if(personalInfo.phone)
+        <div class="contact-item">
+          <span class="contact-icon">P</span>
+          {{ personalInfo.phone }}
+        </div>
+        @endif
+        @if(personalInfo.email)
+        <div class="contact-item">
+          <span class="contact-icon">@</span>
+          {{ personalInfo.email }}
+        </div>
+        @endif
+        @if(personalInfo.city)
+        <div class="contact-item">
+          <span class="contact-icon">A</span>
+          {{ personalInfo.city }}, {{ personalInfo.country }}
+        </div>
+        @endif
+        @each(link in personalInfo.socialLinks)
+        <div class="contact-item">
+          <span class="contact-icon">{{ link.platform.charAt(0) }}</span>
+          {{ link.label }}
+        </div>
+        @endeach
+      </div>
+
+      @if(skills && skills.length)
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Logiciels</h2>
+        <div class="software-container">
+          @each(skill in skills.slice(0, 4))
+          <div class="software-item">{{ skill.name }}</div>
+          @endeach
+        </div>
+      </div>
+      @endif
+
+      @if(languages && languages.length)
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Langues</h2>
+        @each(lang in languages)
+        <div class="language-item">
+          <div class="language-header">
+            <span class="language-name">{{ lang.name }}</span>
+            <span class="language-level">{{ lang.proficiency }}</span>
+          </div>
+          <div class="language-bar">
+            <div class="language-progress" style="width: {{ lang.proficiency === 'native' ? '100' : lang.proficiency === 'fluent' ? '90' : lang.proficiency === 'advanced' ? '75' : lang.proficiency === 'intermediate' ? '50' : '25' }}%"></div>
+          </div>
+        </div>
+        @endeach
+      </div>
+      @endif
+    </div>
+
+    <div class="main-content">
+      <div class="header">
+        <h1 class="name">{{ personalInfo.firstName }} {{ personalInfo.lastName }}</h1>
+        <div class="title">{{ personalInfo.title }}</div>
+      </div>
+
+      @if(summary)
+      <div class="section">
+        <h2 class="section-title">A propos</h2>
+        <p class="summary-text">{{ summary }}</p>
+      </div>
+      @endif
+
+      @if(experiences && experiences.length)
+      <div class="section">
+        <h2 class="section-title">Experiences</h2>
+        @each(exp in experiences)
+        <div class="experience-item">
+          <div class="exp-header">
+            <div class="exp-title">{{ exp.jobTitle }}</div>
+            <div class="exp-date">{{ exp.startDate }} - {{ exp.current ? 'Present' : exp.endDate }}</div>
+          </div>
+          <div class="exp-company">{{ exp.company }}</div>
+          @if(exp.achievements && exp.achievements.length)
+          <ul class="exp-achievements">
+            @each(achievement in exp.achievements)
+            <li>{{ achievement }}</li>
+            @endeach
+          </ul>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(education && education.length)
+      <div class="section">
+        <h2 class="section-title">Formation</h2>
+        @each(edu in education)
+        <div class="education-item">
+          <div class="edu-header">
+            <div class="edu-degree">{{ edu.degree }} / {{ edu.field }}</div>
+            <div class="edu-date">{{ edu.startDate }} - {{ edu.endDate }}</div>
+          </div>
+          <div class="edu-school">{{ edu.institution }}</div>
+          @if(edu.description)
+          <div class="edu-details">{{ edu.description }}</div>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      <div class="bottom-grid">
+        @if(awards && awards.length)
+        <div class="section">
+          <h2 class="section-title">Qualites</h2>
+          <ul class="qualities-list">
+            @each(award in awards)
+            <li>{{ award.title }}</li>
+            @endeach
+          </ul>
+        </div>
+        @endif
+
+        @if(interests && interests.length)
+        <div class="section">
+          <h2 class="section-title">Centres d'interet</h2>
+          <ul class="interests-list">
+            @each(interest in interests)
+            <li>{{ interest.name }}</li>
+            @endeach
+          </ul>
+        </div>
+        @endif
+      </div>
+    </div>
+  </div>
+</body>
+</html>

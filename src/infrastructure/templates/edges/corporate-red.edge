@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: {{typography.bodySize}}pt;
+      line-height: {{typography.lineHeight}};
+      color: {{colors.text}};
+      background: {{colors.background}};
+    }
+
+    .cv-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 35%;
+      background: #3d3d3d;
+      color: #ffffff;
+      padding: 0;
+    }
+
+    .main-content {
+      width: 65%;
+      padding: 40px;
+      background: {{colors.background}};
+    }
+
+    .photo-container {
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .photo {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 5px solid {{colors.primary}};
+      object-fit: cover;
+      background: #666;
+    }
+
+    .sidebar-section {
+      padding: 25px 30px;
+    }
+
+    .sidebar-section-title {
+      font-size: 14pt;
+      font-weight: 700;
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .contact-item {
+      margin-bottom: 15px;
+    }
+
+    .contact-label {
+      font-weight: 700;
+      font-size: 10pt;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 3px;
+    }
+
+    .contact-value {
+      font-size: 10pt;
+      color: #cccccc;
+    }
+
+    .skill-item {
+      margin-bottom: 8px;
+      font-size: 10pt;
+      color: #cccccc;
+      display: flex;
+      align-items: center;
+    }
+
+    .skill-item::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: {{colors.primary}};
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .reference-item {
+      margin-bottom: 15px;
+    }
+
+    .reference-name {
+      font-weight: 700;
+      color: #ffffff;
+      font-size: 11pt;
+    }
+
+    .reference-title {
+      font-size: 9pt;
+      color: #cccccc;
+    }
+
+    .reference-contact {
+      font-size: 9pt;
+      color: {{colors.primary}};
+      margin-top: 5px;
+    }
+
+    .header {
+      margin-bottom: 30px;
+    }
+
+    .name {
+      font-size: 36pt;
+      font-weight: 900;
+      color: {{colors.headings}};
+      text-transform: uppercase;
+      line-height: 1.1;
+      font-family: 'Georgia', serif;
+    }
+
+    .title {
+      font-size: 12pt;
+      letter-spacing: 5px;
+      color: #666;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 12pt;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: {{colors.primary}};
+      border-bottom: 2px solid {{colors.primary}};
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    .education-item, .experience-item {
+      margin-bottom: 20px;
+    }
+
+    .item-title {
+      font-size: 12pt;
+      font-weight: 700;
+      color: {{colors.headings}};
+    }
+
+    .item-subtitle {
+      font-size: 10pt;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .item-date {
+      font-size: 9pt;
+      color: {{colors.primary}};
+      margin-top: 2px;
+    }
+
+    .item-description {
+      font-size: 10pt;
+      color: {{colors.text}};
+      margin-top: 8px;
+      text-align: justify;
+    }
+
+    .item-achievements {
+      margin-top: 8px;
+      padding-left: 15px;
+    }
+
+    .item-achievements li {
+      font-size: 10pt;
+      color: {{colors.text}};
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="cv-container">
+    <div class="sidebar">
+      {{#if personalInfo.photoUrl}}
+      <div class="photo-container">
+        <img src="{{personalInfo.photoUrl}}" alt="Photo" class="photo">
+      </div>
+      {{/if}}
+
+      <div class="sidebar-section">
+        <h2 class="sidebar-section-title">Contact</h2>
+        {{#if personalInfo.address}}
+        <div class="contact-item">
+          <div class="contact-label">Address:</div>
+          <div class="contact-value">{{personalInfo.address}}, {{personalInfo.city}}, {{personalInfo.country}}</div>
+        </div>
+        {{/if}}
+        {{#if personalInfo.email}}
+        <div class="contact-item">
+          <div class="contact-label">Email:</div>
+          <div class="contact-value">{{personalInfo.email}}</div>
+        </div>
+        {{/if}}
+        {{#if personalInfo.phone}}
+        <div class="contact-item">
+          <div class="contact-label">Phone:</div>
+          <div class="contact-value">{{personalInfo.phone}}</div>
+        </div>
+        {{/if}}
+        {{#each personalInfo.socialLinks}}
+        <div class="contact-item">
+          <div class="contact-label">{{this.platform}}:</div>
+          <div class="contact-value">{{this.label}}</div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="sidebar-section">
+        <h2 class="sidebar-section-title">Skills</h2>
+        {{#each skills}}
+        <div class="skill-item">{{this.name}}</div>
+        {{/each}}
+      </div>
+
+      {{#if references.length}}
+      <div class="sidebar-section">
+        <h2 class="sidebar-section-title">Reference</h2>
+        {{#each references}}
+        <div class="reference-item">
+          <div class="reference-name">{{this.name}}</div>
+          <div class="reference-title">{{this.title}}, {{this.company}}</div>
+          <div class="reference-contact">{{this.email}}</div>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
+
+    <div class="main-content">
+      <div class="header">
+        <h1 class="name">{{personalInfo.firstName}}<br>{{personalInfo.lastName}}</h1>
+        <div class="title">{{personalInfo.title}}</div>
+      </div>
+
+      {{#if education.length}}
+      <div class="section">
+        <h2 class="section-title">Education</h2>
+        {{#each education}}
+        <div class="education-item">
+          <div class="item-title">{{this.degree}} ({{this.endDate}})</div>
+          <div class="item-subtitle">{{this.institution}}</div>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{#if experiences.length}}
+      <div class="section">
+        <h2 class="section-title">Work Experience</h2>
+        {{#each experiences}}
+        <div class="experience-item">
+          <div class="item-title">{{this.jobTitle}} at {{this.company}}</div>
+          <div class="item-date">{{this.startDate}} - {{#if this.current}}Current{{else}}{{this.endDate}}{{/if}}</div>
+          <ul class="item-achievements">
+            {{#each this.achievements}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+</body>
+</html>

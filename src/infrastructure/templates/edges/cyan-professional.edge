@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: {{typography.bodySize}}pt;
+      line-height: {{typography.lineHeight}};
+      background: {{colors.background}};
+      color: {{colors.text}};
+    }
+
+    .cv-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 35%;
+      background: #2a3a4a;
+      color: #ffffff;
+      padding: 0;
+    }
+
+    .main-content {
+      width: 65%;
+      background: {{colors.background}};
+      padding: 0;
+    }
+
+    .header-bar {
+      background: {{colors.primary}};
+      padding: 20px 30px;
+      color: #ffffff;
+    }
+
+    .name {
+      font-size: 24pt;
+      font-weight: 300;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+    }
+
+    .title {
+      font-size: 10pt;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-top: 5px;
+      opacity: 0.9;
+    }
+
+    .header-contact {
+      display: flex;
+      gap: 20px;
+      margin-top: 15px;
+      font-size: 8pt;
+    }
+
+    .header-contact-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .header-contact-icon {
+      width: 16px;
+      height: 16px;
+      border: 1px solid #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+    }
+
+    .photo-section {
+      padding: 30px;
+      text-align: center;
+    }
+
+    .photo {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 4px solid {{colors.primary}};
+      object-fit: cover;
+      background: #3a4a5a;
+    }
+
+    .sidebar-section {
+      padding: 20px 30px;
+    }
+
+    .sidebar-title {
+      font-size: 10pt;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #4a5a6a;
+    }
+
+    .profile-text {
+      font-size: 9pt;
+      color: #aabbcc;
+      line-height: 1.6;
+      text-align: justify;
+    }
+
+    .edu-item {
+      margin-bottom: 15px;
+    }
+
+    .edu-degree {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .edu-school {
+      font-size: 9pt;
+      color: #aabbcc;
+      font-style: italic;
+    }
+
+    .edu-date {
+      font-size: 8pt;
+      color: #8899aa;
+    }
+
+    .skill-item {
+      margin-bottom: 10px;
+    }
+
+    .skill-name {
+      font-size: 9pt;
+      color: #ffffff;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .skill-bar {
+      height: 6px;
+      background: #4a5a6a;
+      border-radius: 3px;
+    }
+
+    .skill-progress {
+      height: 100%;
+      background: {{colors.primary}};
+      border-radius: 3px;
+    }
+
+    .language-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9pt;
+      color: #aabbcc;
+      margin-bottom: 5px;
+    }
+
+    .main-section {
+      padding: 25px 40px;
+    }
+
+    .main-title {
+      font-size: 11pt;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: {{colors.headings}};
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid {{colors.primary}};
+    }
+
+    .experience-item {
+      margin-bottom: 25px;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .exp-date {
+      font-size: 9pt;
+      font-weight: 700;
+      color: {{colors.primary}};
+    }
+
+    .exp-position {
+      font-size: 11pt;
+      font-weight: 700;
+      color: {{colors.headings}};
+      text-transform: uppercase;
+    }
+
+    .exp-company {
+      font-size: 9pt;
+      color: #666;
+      font-style: italic;
+    }
+
+    .exp-desc {
+      font-size: 9pt;
+      color: {{colors.text}};
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    .exp-achievements {
+      margin-top: 10px;
+      padding-left: 15px;
+    }
+
+    .exp-achievements li {
+      font-size: 9pt;
+      color: {{colors.text}};
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="cv-container">
+    <div class="sidebar">
+      {{#if personalInfo.photoUrl}}
+      <div class="photo-section">
+        <img src="{{personalInfo.photoUrl}}" alt="Photo" class="photo">
+      </div>
+      {{/if}}
+
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Profile</h2>
+        <p class="profile-text">{{summary}}</p>
+      </div>
+
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Education</h2>
+        {{#each education}}
+        <div class="edu-item">
+          <div class="edu-degree">{{this.degree}}</div>
+          <div class="edu-school">{{this.institution}}</div>
+          <div class="edu-date">{{this.startDate}} - {{this.endDate}}</div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Skills</h2>
+        {{#each skills}}
+        <div class="skill-item">
+          <div class="skill-name">{{this.name}}</div>
+          <div class="skill-bar">
+            <div class="skill-progress" style="width: {{#if (eq this.level 'expert')}}100%{{else}}{{#if (eq this.level 'advanced')}}80%{{else}}{{#if (eq this.level 'intermediate')}}60%{{else}}40%{{/if}}{{/if}}{{/if}}"></div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Languages</h2>
+        {{#each languages}}
+        <div class="language-item">
+          <span>{{this.name}}</span>
+          <span>{{this.proficiency}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="header-bar">
+        <h1 class="name">{{personalInfo.firstName}} {{personalInfo.lastName}}</h1>
+        <div class="title">{{personalInfo.title}}</div>
+        <div class="header-contact">
+          {{#if personalInfo.phone}}
+          <div class="header-contact-item">
+            <span class="header-contact-icon">T</span>
+            {{personalInfo.phone}}
+          </div>
+          {{/if}}
+          {{#if personalInfo.email}}
+          <div class="header-contact-item">
+            <span class="header-contact-icon">@</span>
+            {{personalInfo.email}}
+          </div>
+          {{/if}}
+          {{#if personalInfo.city}}
+          <div class="header-contact-item">
+            <span class="header-contact-icon">A</span>
+            {{personalInfo.city}}, {{personalInfo.country}}
+          </div>
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="main-section">
+        <h2 class="main-title">Work Experience</h2>
+        {{#each experiences}}
+        <div class="experience-item">
+          <div class="exp-header">
+            <div>
+              <div class="exp-position">{{this.jobTitle}}</div>
+              <div class="exp-company">{{this.company}}{{#if this.location}}, {{this.location}}{{/if}}</div>
+            </div>
+            <div class="exp-date">{{this.startDate}} - {{#if this.current}}Present{{else}}{{this.endDate}}{{/if}}</div>
+          </div>
+          <p class="exp-desc">{{this.description}}</p>
+          {{#if this.achievements.length}}
+          <ul class="exp-achievements">
+            {{#each this.achievements}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

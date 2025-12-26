@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: {{ typography.bodySize }}pt;
+      line-height: {{ typography.lineHeight }};
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      padding: 40px;
+    }
+
+    .cv-container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      gap: 40px;
+    }
+
+    .left-column {
+      width: 45%;
+    }
+
+    .right-column {
+      width: 55%;
+    }
+
+    .header {
+      margin-bottom: 30px;
+    }
+
+    .name {
+      font-size: 32pt;
+      font-weight: 300;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .name strong {
+      font-weight: 700;
+    }
+
+    .title-badge {
+      display: inline-block;
+      border: 1px solid {{ colors.primary }};
+      padding: 8px 20px;
+      margin-top: 15px;
+      font-size: 10pt;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .photo-container {
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .photo {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 3px solid {{ colors.primary }};
+      object-fit: cover;
+      background: #2a2a4e;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 11pt;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: {{ colors.primary }};
+      margin-bottom: 15px;
+    }
+
+    .about-text {
+      font-size: 10pt;
+      color: #ccccdd;
+      line-height: 1.7;
+      text-align: justify;
+    }
+
+    .skill-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .skill-tag {
+      border: 1px solid {{ colors.primary }};
+      border-radius: 20px;
+      padding: 8px 15px;
+      font-size: 9pt;
+      color: #ffffff;
+    }
+
+    .education-item {
+      margin-bottom: 20px;
+      padding-left: 15px;
+      border-left: 2px solid {{ colors.primary }};
+    }
+
+    .edu-date {
+      font-size: 9pt;
+      color: {{ colors.primary }};
+      font-weight: 700;
+    }
+
+    .edu-degree {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 3px;
+    }
+
+    .edu-school {
+      font-size: 9pt;
+      color: #aaaacc;
+    }
+
+    .experience-item {
+      margin-bottom: 25px;
+      padding-left: 15px;
+      border-left: 2px solid {{ colors.primary }};
+    }
+
+    .exp-date {
+      font-size: 9pt;
+      color: {{ colors.primary }};
+      font-weight: 700;
+    }
+
+    .exp-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 3px;
+    }
+
+    .exp-company {
+      font-size: 9pt;
+      color: #aaaacc;
+    }
+
+    .exp-achievements {
+      margin-top: 10px;
+      padding-left: 15px;
+    }
+
+    .exp-achievements li {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-bottom: 5px;
+    }
+
+    .contact-section {
+      margin-top: 30px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 9pt;
+      color: #ccccdd;
+    }
+
+    .contact-icon {
+      width: 24px;
+      height: 24px;
+      border: 1px solid {{ colors.primary }};
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 10px;
+      color: {{ colors.primary }};
+    }
+  </style>
+</head>
+<body>
+  <div class="cv-container">
+    <div class="left-column">
+      <div class="header">
+        <h1 class="name">{{ personalInfo.firstName }}<br><strong>{{ personalInfo.lastName }}</strong></h1>
+        <div class="title-badge">{{ personalInfo.title }}</div>
+      </div>
+
+      @if(personalInfo.photoUrl)
+      <div class="photo-container">
+        <img src="{{ personalInfo.photoUrl }}" alt="Photo" class="photo">
+      </div>
+      @endif
+
+      <div class="section">
+        <h2 class="section-title">About</h2>
+        <p class="about-text">{{ summary }}</p>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Skills</h2>
+        <div class="skill-grid">
+          @each(skill in skills)
+          <span class="skill-tag">{{ skill.name }}</span>
+          @endeach
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">Education</h2>
+        @each(edu in education)
+        <div class="education-item">
+          <div class="edu-date">{{ edu.startDate }} - {{ edu.endDate }}</div>
+          <div class="edu-degree">{{ edu.degree }}</div>
+          <div class="edu-school">{{ edu.institution }}</div>
+        </div>
+        @endeach
+      </div>
+
+      <div class="contact-section">
+        <h2 class="section-title">Contact</h2>
+        @if(personalInfo.phone)
+        <div class="contact-item">
+          <span class="contact-icon">T</span>
+          {{ personalInfo.phone }}
+        </div>
+        @endif
+        @if(personalInfo.email)
+        <div class="contact-item">
+          <span class="contact-icon">@</span>
+          {{ personalInfo.email }}
+        </div>
+        @endif
+        @each(link in personalInfo.socialLinks)
+        <div class="contact-item">
+          <span class="contact-icon">{{ link.platform[0] }}</span>
+          {{ link.label }}
+        </div>
+        @endeach
+      </div>
+    </div>
+
+    <div class="right-column">
+      <div class="section">
+        <h2 class="section-title">Experience</h2>
+        @each(exp in experiences)
+        <div class="experience-item">
+          <div class="exp-date">{{ exp.startDate }} - {{ exp.current ? 'Present' : exp.endDate }}</div>
+          <div class="exp-title">{{ exp.jobTitle }}</div>
+          <div class="exp-company">{{ exp.company }}</div>
+          @if(exp.achievements && exp.achievements.length)
+          <ul class="exp-achievements">
+            @each(achievement in exp.achievements)
+            <li>{{ achievement }}</li>
+            @endeach
+          </ul>
+          @endif
+        </div>
+        @endeach
+      </div>
+    </div>
+  </div>
+</body>
+</html>

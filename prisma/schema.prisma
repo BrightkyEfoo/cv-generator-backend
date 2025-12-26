@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Template {
+  id               String   @id @default(uuid())
+  name             String
+  description      String
+  previewUrl       String?
+  category         TemplateCategory
+  edgeCode         String   @db.Text
+  features         Json
+  defaultColors    Json
+  availableFonts   String[]
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  createdBy        String?
+  cvs              CV[]
+}
+
+enum TemplateCategory {
+  professional
+  creative
+  modern
+  simple
+  academic
+}
+
+model CV {
+  id             String    @id @default(uuid())
+  sessionId      String
+  title          String
+  personalInfo   Json
+  summary        String?   @db.Text
+  objective      String?   @db.Text
+  experiences    Json      @default("[]")
+  education      Json      @default("[]")
+  skills         Json      @default("[]")
+  languages      Json      @default("[]")
+  certifications Json      @default("[]")
+  projects       Json      @default("[]")
+  publications   Json      @default("[]")
+  awards         Json      @default("[]")
+  volunteer      Json      @default("[]")
+  interests      Json      @default("[]")
+  references     Json      @default("[]")
+  customSections Json      @default("[]")
+  customization  Json
+  isPaid         Boolean   @default(false)
+  version        Int       @default(1)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  lastExportedAt DateTime?
+  templateId     String
+  template       Template  @relation(fields: [templateId], references: [id])
+  payment        Payment?
+
+  @@index([sessionId])
+}
+
+model Payment {
+  id                    String        @id @default(uuid())
+  cvId                  String        @unique
+  cv                    CV            @relation(fields: [cvId], references: [id], onDelete: Cascade)
+  sessionId             String
+  stripePaymentIntentId String        @unique
+  amount                Int
+  currency              String        @default("eur")
+  status                PaymentStatus @default(pending)
+  createdAt             DateTime      @default(now())
+  completedAt           DateTime?
+
+  @@index([stripePaymentIntentId])
+}
+
+enum PaymentStatus {
+  pending
+  completed
+  failed
+  refunded
+}
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         AdminRole @default(editor)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum AdminRole {
+  superadmin
+  admin
+  editor
+}
