@@ -24,6 +24,17 @@ export function createApp(prisma: PrismaClient): { app: express.Application; con
 
   app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'blob:', '*'],
+        fontSrc: ["'self'", 'data:'],
+        frameAncestors: ['*'], // Allow embedding in any iframe
+      },
+    },
+    frameguard: false, // Disable X-Frame-Options header to allow framing
   }));
   app.use(compression());
 
