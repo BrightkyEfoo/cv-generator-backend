@@ -5,24 +5,34 @@ import compression from 'compression';
 import type { PrismaClient } from '@prisma/client';
 import { createContainer, type Container } from './container.js';
 import { createCVRoutes, createTemplateRoutes, createPaymentRoutes, createWebhookRoutes, createUploadRoutes, createAdminRoutes } from './presentation/routes/index.js';
-import { errorHandler, sessionHandler } from './presentation/middleware/index.js';
+import { errorHandler, sessionHandler, apiKeyHandler } from './presentation/middleware/index.js';
 
 export function createApp(prisma: PrismaClient): { app: express.Application; container: Container } {
   const app = express();
   const container = createContainer(prisma);
 
-  app.use(helmet());
-  app.use(compression());
+  // CORS must be before helmet to handle preflight requests
   app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: true,
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Session-Id', 'Authorization'],
     exposedHeaders: ['X-Session-Id'],
+    credentials: false,
   }));
+
+  // Handle preflight requests explicitly
+  app.options('*', cors());
+
+  app.use(helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  }));
+  app.use(compression());
 
   app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }),
     (req, res, next) => createWebhookRoutes(container.paymentController)(req, res, next));
 
   app.use(express.json());
+  app.use(apiKeyHandler);
   app.use(sessionHandler);
 
   app.use('/api/cv', createCVRoutes(container.cvController));
