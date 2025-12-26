@@ -7,7 +7,11 @@ export function createCVRoutes(controller: CVController): Router {
 
   router.post('/', asyncHandler((req, res) => controller.create(req, res)));
   router.get('/session', asyncHandler((req, res) => controller.getBySession(req, res)));
-  router.get('/:id', asyncHandler((req, res) => controller.getById(req, res)));
+
+  // Specific routes must come before :id to avoid being caught by the catch-all
+  router.get('/:id/preview', asyncHandler((req, res) => controller.preview(req, res)));
+  router.get('/:id/preview-image', asyncHandler((req, res) => controller.previewImage(req, res)));
+  router.get('/:id/download', asyncHandler((req, res) => controller.download(req, res)));
 
   router.patch('/:id/personal-info', asyncHandler((req, res) => controller.updatePersonalInfo(req, res)));
   router.patch('/:id/summary', asyncHandler((req, res) => controller.updateSummary(req, res)));
@@ -25,9 +29,8 @@ export function createCVRoutes(controller: CVController): Router {
   router.patch('/:id/custom-sections', asyncHandler((req, res) => controller.updateCustomSections(req, res)));
   router.patch('/:id/customization', asyncHandler((req, res) => controller.updateCustomization(req, res)));
 
-  router.get('/:id/preview', asyncHandler((req, res) => controller.preview(req, res)));
-  router.get('/:id/preview-image', asyncHandler((req, res) => controller.previewImage(req, res)));
-  router.get('/:id/download', asyncHandler((req, res) => controller.download(req, res)));
+  // This must be last as it catches all /:id patterns
+  router.get('/:id', asyncHandler((req, res) => controller.getById(req, res)));
 
   return router;
 }
