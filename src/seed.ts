@@ -231,13 +231,17 @@ async function seedTemplates() {
 
     const templateId = `template-${config.fileName}`;
 
+    const edgeCodes = { default: edgeCode, fr: edgeCode };
+
     await prisma.template.upsert({
       where: { id: templateId },
       update: {
         name: config.name,
         description: config.description,
         category: config.category,
-        edgeCode,
+        edgeCodes,
+        defaultLanguage: 'fr',
+        availableLanguages: ['fr'],
         features: config.features,
         defaultColors: config.defaultColors,
         availableFonts: config.availableFonts,
@@ -248,7 +252,9 @@ async function seedTemplates() {
         name: config.name,
         description: config.description,
         category: config.category,
-        edgeCode,
+        edgeCodes,
+        defaultLanguage: 'fr',
+        availableLanguages: ['fr'],
         features: config.features,
         defaultColors: config.defaultColors,
         availableFonts: config.availableFonts,

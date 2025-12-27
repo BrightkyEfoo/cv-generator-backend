@@ -15,6 +15,7 @@ export type {
   UpdateReferencesDto,
   UpdateCustomSectionsDto,
   UpdateCustomizationDto,
+  UpdateTemplateLanguageDto,
   CVResponseDto,
 } from './CVDto.js';
 

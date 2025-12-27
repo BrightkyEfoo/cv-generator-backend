@@ -13,6 +13,6 @@ export type { Reference } from './Reference.js';
 export type { CustomSection, CustomSectionItem, CustomField, CustomFieldType } from './CustomSection.js';
 export type { SectionConfig, CVLayout, StandardSectionType } from './SectionConfig.js';
 export type { CV, CVCustomization, CVTypography, CVColors, CVSpacing } from './CV.js';
-export type { Template, TemplateFeature } from './Template.js';
+export type { Template, TemplateFeature, TemplateLanguage, TemplateEdgeCodes } from './Template.js';
 export type { Payment, PaymentStatus } from './Payment.js';
 export type { Admin, AdminRole } from './Admin.js';

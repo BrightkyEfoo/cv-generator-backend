@@ -14,6 +14,10 @@ export class ManageTemplatesUseCase {
 
   async create(dto: CreateTemplateDto, adminId: string): Promise<Template> {
     const templateId = generateId();
+    const defaultLanguage = dto.defaultLanguage || 'fr';
+    const edgeCodes = dto.edgeCode
+      ? { default: dto.edgeCode, [defaultLanguage]: dto.edgeCode }
+      : { default: '' };
 
     const template = await this.templateRepository.create({
       id: templateId,
@@ -25,10 +29,13 @@ export class ManageTemplatesUseCase {
       defaultColors: dto.defaultColors,
       availableFonts: dto.availableFonts,
       isActive: true,
-      edgeCode: dto.edgeCode,
+      edgeCodes,
+      defaultLanguage,
+      availableLanguages: dto.availableLanguages || [defaultLanguage],
     });
 
-    const previewUrl = await this.generatePreview(templateId, dto.edgeCode, dto.defaultColors);
+    const edgeCode = edgeCodes.default || edgeCodes[defaultLanguage] || '';
+    const previewUrl = await this.generatePreview(templateId, edgeCode, dto.defaultColors);
     await this.templateRepository.update(templateId, { previewUrl });
 
     return { ...template, previewUrl };
@@ -47,7 +54,7 @@ export class ManageTemplatesUseCase {
     });
 
     if (dto.edgeCode || dto.defaultColors) {
-      const edgeCode = dto.edgeCode || await this.templateRepository.getEdgeCode(id) || '';
+      const edgeCode = dto.edgeCode || await this.templateRepository.getEdgeCode(id, updated.defaultLanguage) || '';
       const colors = dto.defaultColors
         ? { ...existing.defaultColors, ...dto.defaultColors }
         : existing.defaultColors;
@@ -74,7 +81,7 @@ export class ManageTemplatesUseCase {
       throw new NotFoundError('Template', id);
     }
 
-    const edgeCode = await this.templateRepository.getEdgeCode(id) || '';
+    const edgeCode = await this.templateRepository.getEdgeCode(id, template.defaultLanguage) || '';
     const previewUrl = await this.generatePreview(id, edgeCode, template.defaultColors);
     await this.templateRepository.update(id, { previewUrl });
 
@@ -99,6 +106,7 @@ export class ManageTemplatesUseCase {
       id: 'mock-cv',
       sessionId: 'mock-session',
       title: 'Sample CV',
+      templateLanguage: 'fr',
       personalInfo: {
         firstName: 'Jean',
         lastName: 'Dupont',

@@ -1,5 +1,5 @@
 import type { PrismaClient, CV as PrismaCV } from '@prisma/client';
-import type { CV } from '../../domain/entities/index.js';
+import type { CV, TemplateLanguage } from '../../domain/entities/index.js';
 import type { ICVRepository } from '../../domain/interfaces/index.js';
 
 export class PrismaCVRepository implements ICVRepository {
@@ -10,6 +10,7 @@ export class PrismaCVRepository implements ICVRepository {
       id: prismaCV.id,
       sessionId: prismaCV.sessionId,
       title: prismaCV.title,
+      templateLanguage: prismaCV.templateLanguage as TemplateLanguage,
       personalInfo: prismaCV.personalInfo as unknown as CV['personalInfo'],
       summary: prismaCV.summary || undefined,
       objective: prismaCV.objective || undefined,
@@ -43,6 +44,7 @@ export class PrismaCVRepository implements ICVRepository {
         id: cv.id,
         sessionId: cv.sessionId,
         title: cv.title,
+        templateLanguage: cv.templateLanguage,
         personalInfo: cv.personalInfo as object,
         summary: cv.summary,
         objective: cv.objective,
@@ -85,6 +87,7 @@ export class PrismaCVRepository implements ICVRepository {
       where: { id: cv.id },
       data: {
         title: cv.title,
+        templateLanguage: cv.templateLanguage,
         personalInfo: cv.personalInfo as object,
         summary: cv.summary,
         objective: cv.objective,

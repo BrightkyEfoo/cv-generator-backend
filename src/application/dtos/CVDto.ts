@@ -13,12 +13,14 @@ import type {
   Reference,
   CustomSection,
   CVCustomization,
+  TemplateLanguage,
 } from '../../domain/entities/index.js';
 
 export interface CreateCVDto {
   sessionId: string;
   title: string;
   templateId: string;
+  templateLanguage?: TemplateLanguage;
 }
 
 export interface UpdatePersonalInfoDto {
@@ -97,10 +99,16 @@ export interface UpdateCustomizationDto {
   customization: Partial<CVCustomization>;
 }
 
+export interface UpdateTemplateLanguageDto {
+  cvId: string;
+  templateLanguage: TemplateLanguage;
+}
+
 export interface CVResponseDto {
   id: string;
   sessionId: string;
   title: string;
+  templateLanguage: TemplateLanguage;
   personalInfo: PersonalInfo;
   summary?: string;
   objective?: string;

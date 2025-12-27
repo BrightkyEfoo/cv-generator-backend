@@ -27,6 +27,7 @@ export class CreateCVUseCase {
       id: generateCvId(),
       sessionId: dto.sessionId,
       title: dto.title,
+      templateLanguage: dto.templateLanguage || template.defaultLanguage,
       personalInfo: {
         firstName: '',
         lastName: '',

@@ -1,5 +1,5 @@
 import puppeteer, { Browser } from 'puppeteer';
-import type { CV } from '../../domain/entities/index.js';
+import type { CV, TemplateLanguage } from '../../domain/entities/index.js';
 import type { IPDFService } from '../../application/interfaces/index.js';
 import { EdgeTemplateRenderer, TemplateData } from './EdgeTemplateRenderer.js';
 
@@ -8,7 +8,7 @@ export class PuppeteerPDFService implements IPDFService {
   private edgeRenderer: EdgeTemplateRenderer;
 
   constructor(
-    private readonly getEdgeCode: (templateId: string) => Promise<string | null>
+    private readonly getEdgeCode: (templateId: string, language?: TemplateLanguage) => Promise<string | null>
   ) {
     this.edgeRenderer = new EdgeTemplateRenderer();
   }
@@ -52,7 +52,7 @@ export class PuppeteerPDFService implements IPDFService {
     const page = await browser.newPage();
 
     try {
-      const edgeCode = await this.getEdgeCode(cv.customization.templateId);
+      const edgeCode = await this.getEdgeCode(cv.customization.templateId, cv.templateLanguage);
 
       let html: string;
 
@@ -191,7 +191,7 @@ export class PuppeteerPDFService implements IPDFService {
     const page = await browser.newPage();
 
     try {
-      const edgeCode = await this.getEdgeCode(cv.customization.templateId);
+      const edgeCode = await this.getEdgeCode(cv.customization.templateId, cv.templateLanguage);
 
       let html: string;
 

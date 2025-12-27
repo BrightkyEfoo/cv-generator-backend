@@ -7,6 +7,9 @@ export const defaultTemplates: Template[] = [
     description: 'Clean and professional template suitable for corporate environments',
     previewUrl: '/templates/professional.png',
     category: 'professional',
+    edgeCodes: { default: '' },
+    defaultLanguage: 'fr',
+    availableLanguages: ['fr'],
     features: {
       hasPhoto: true,
       hasSidebar: true,
@@ -27,6 +30,9 @@ export const defaultTemplates: Template[] = [
     description: 'Contemporary design with bold colors and modern typography',
     previewUrl: '/templates/modern.png',
     category: 'modern',
+    edgeCodes: { default: '' },
+    defaultLanguage: 'fr',
+    availableLanguages: ['fr'],
     features: {
       hasPhoto: true,
       hasSidebar: true,
@@ -47,6 +53,9 @@ export const defaultTemplates: Template[] = [
     description: 'Unique layout for creative professionals and designers',
     previewUrl: '/templates/creative.png',
     category: 'creative',
+    edgeCodes: { default: '' },
+    defaultLanguage: 'fr',
+    availableLanguages: ['fr'],
     features: {
       hasPhoto: true,
       hasSidebar: true,
@@ -67,6 +76,9 @@ export const defaultTemplates: Template[] = [
     description: 'Minimalist design focusing on content clarity',
     previewUrl: '/templates/simple.png',
     category: 'simple',
+    edgeCodes: { default: '' },
+    defaultLanguage: 'fr',
+    availableLanguages: ['fr'],
     features: {
       hasPhoto: false,
       hasSidebar: false,
@@ -87,6 +99,9 @@ export const defaultTemplates: Template[] = [
     description: 'Traditional format ideal for academic and research positions',
     previewUrl: '/templates/academic.png',
     category: 'academic',
+    edgeCodes: { default: '' },
+    defaultLanguage: 'fr',
+    availableLanguages: ['fr'],
     features: {
       hasPhoto: false,
       hasSidebar: false,
@@ -107,6 +122,9 @@ export const defaultTemplates: Template[] = [
     description: 'Sophisticated design for senior-level professionals',
     previewUrl: '/templates/executive.png',
     category: 'professional',
+    edgeCodes: { default: '' },
+    defaultLanguage: 'fr',
+    availableLanguages: ['fr'],
     features: {
       hasPhoto: true,
       hasSidebar: true,

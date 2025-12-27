@@ -12,6 +12,7 @@ import type { Interest } from './Interest.js';
 import type { Reference } from './Reference.js';
 import type { CustomSection } from './CustomSection.js';
 import type { CVLayout } from './SectionConfig.js';
+import type { TemplateLanguage } from './Template.js';
 
 export interface CVTypography {
   headingFont: string;
@@ -56,6 +57,7 @@ export interface CV {
   id: string;
   sessionId: string;
   title: string;
+  templateLanguage: TemplateLanguage;
   personalInfo: PersonalInfo;
   summary?: string;
   objective?: string;

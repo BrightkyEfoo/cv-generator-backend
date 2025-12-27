@@ -26,8 +26,8 @@ export function createContainer(prisma: PrismaClient): Container {
   const jwtSecret = process.env.ADMIN_JWT_SECRET || 'default-secret';
 
   const paymentService = new StripePaymentService(stripeSecretKey, stripeWebhookSecret);
-  const pdfService = new PuppeteerPDFService(async (templateId) => {
-    return templateRepository.getEdgeCode(templateId);
+  const pdfService = new PuppeteerPDFService(async (templateId, language) => {
+    return templateRepository.getEdgeCode(templateId, language);
   });
   const fileStorageService = new LocalFileStorageService('./uploads', '/api/uploads');
   const previewGenerator = new TemplatePreviewGenerator('./public/previews');

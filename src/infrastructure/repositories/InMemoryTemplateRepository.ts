@@ -1,9 +1,6 @@
-import type { Template } from '../../domain/entities/index.js';
+import type { Template, TemplateLanguage } from '../../domain/entities/index.js';
 import type { ITemplateRepository } from '../../domain/interfaces/index.js';
 import { store } from '../persistence/InMemoryStore.js';
-
-// Store edge codes separately since Template entity doesn't include edgeCode
-const edgeCodes = new Map<string, string>();
 
 export class InMemoryTemplateRepository implements ITemplateRepository {
   async findAll(): Promise<Template[]> {
@@ -21,11 +18,18 @@ export class InMemoryTemplateRepository implements ITemplateRepository {
     );
   }
 
-  async getEdgeCode(id: string): Promise<string | null> {
-    return edgeCodes.get(id) || null;
+  async getEdgeCode(id: string, language?: TemplateLanguage): Promise<string | null> {
+    const template = store.getTemplates().get(id);
+    if (!template) return null;
+
+    // Return requested language, fall back to default, then to 'default' key
+    if (language && template.edgeCodes[language]) {
+      return template.edgeCodes[language];
+    }
+    return template.edgeCodes[template.defaultLanguage] || template.edgeCodes.default || null;
   }
 
-  async update(id: string, data: Partial<Template & { edgeCode: string }>): Promise<Template> {
+  async update(id: string, data: Partial<Template>): Promise<Template> {
     const existing = store.getTemplates().get(id);
     if (!existing) {
       throw new Error(`Template not found: ${id}`);
@@ -37,27 +41,22 @@ export class InMemoryTemplateRepository implements ITemplateRepository {
       ...(data.description && { description: data.description }),
       ...(data.previewUrl && { previewUrl: data.previewUrl }),
       ...(data.category && { category: data.category }),
+      ...(data.edgeCodes && { edgeCodes: data.edgeCodes }),
+      ...(data.defaultLanguage && { defaultLanguage: data.defaultLanguage }),
+      ...(data.availableLanguages && { availableLanguages: data.availableLanguages }),
       ...(data.features && { features: data.features }),
       ...(data.defaultColors && { defaultColors: data.defaultColors }),
       ...(data.availableFonts && { availableFonts: data.availableFonts }),
       ...(data.isActive !== undefined && { isActive: data.isActive }),
     };
 
-    if (data.edgeCode) {
-      edgeCodes.set(id, data.edgeCode);
-    }
-
     store.getTemplates().set(id, updated);
     return updated;
   }
 
-  seedTemplates(templates: (Template & { edgeCode?: string })[]): void {
+  seedTemplates(templates: Template[]): void {
     for (const template of templates) {
-      const { edgeCode, ...templateData } = template;
-      store.getTemplates().set(template.id, templateData);
-      if (edgeCode) {
-        edgeCodes.set(template.id, edgeCode);
-      }
+      store.getTemplates().set(template.id, template);
     }
   }
 }

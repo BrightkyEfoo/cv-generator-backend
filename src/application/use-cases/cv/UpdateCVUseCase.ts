@@ -16,6 +16,7 @@ import type {
   UpdateReferencesDto,
   UpdateCustomSectionsDto,
   UpdateCustomizationDto,
+  UpdateTemplateLanguageDto,
 } from '../../dtos/index.js';
 import { NotFoundError } from '../../../shared/errors/index.js';
 
@@ -200,6 +201,15 @@ export class UpdateCVUseCase {
           ? { ...cv.customization.layout, ...dto.customization.layout }
           : cv.customization.layout,
       },
+    });
+    return this.cvRepository.update(updated);
+  }
+
+  async updateTemplateLanguage(dto: UpdateTemplateLanguageDto): Promise<CV> {
+    const cv = await this.getCV(dto.cvId);
+    const updated = this.updateMetadata({
+      ...cv,
+      templateLanguage: dto.templateLanguage,
     });
     return this.cvRepository.update(updated);
   }

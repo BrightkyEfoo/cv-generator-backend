@@ -16,6 +16,8 @@ export class TemplateController {
       description: template.description,
       previewUrl: template.previewUrl,
       category: template.category,
+      defaultLanguage: template.defaultLanguage,
+      availableLanguages: template.availableLanguages,
       features: template.features,
       defaultColors: template.defaultColors,
       availableFonts: template.availableFonts,

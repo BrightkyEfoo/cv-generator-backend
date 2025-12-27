@@ -30,6 +30,7 @@ export function createCVRoutes(controller: CVController): Router {
   router.patch('/:id/references', asyncHandler((req, res) => controller.updateReferences(req, res)));
   router.patch('/:id/custom-sections', asyncHandler((req, res) => controller.updateCustomSections(req, res)));
   router.patch('/:id/customization', asyncHandler((req, res) => controller.updateCustomization(req, res)));
+  router.patch('/:id/template-language', asyncHandler((req, res) => controller.updateTemplateLanguage(req, res)));
 
   // This must be last as it catches all /:id patterns
   router.get('/:id', asyncHandler((req, res) => controller.getById(req, res)));

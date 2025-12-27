@@ -1,4 +1,4 @@
-import type { TemplateFeature } from '../../domain/entities/index.js';
+import type { TemplateFeature, TemplateLanguage } from '../../domain/entities/index.js';
 
 export interface TemplateResponseDto {
   id: string;
@@ -6,6 +6,8 @@ export interface TemplateResponseDto {
   description: string;
   previewUrl: string;
   category: string;
+  defaultLanguage: TemplateLanguage;
+  availableLanguages: TemplateLanguage[];
   features: TemplateFeature;
   defaultColors: {
     primary: string;

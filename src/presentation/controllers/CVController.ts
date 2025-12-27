@@ -16,6 +16,7 @@ export class CVController {
       id: cv.id,
       sessionId: cv.sessionId,
       title: cv.title,
+      templateLanguage: cv.templateLanguage,
       personalInfo: cv.personalInfo,
       summary: cv.summary,
       objective: cv.objective,
@@ -43,6 +44,7 @@ export class CVController {
       sessionId: req.sessionId,
       title: req.body.title || 'My CV',
       templateId: req.body.templateId,
+      templateLanguage: req.body.templateLanguage,
     });
     res.status(201).json(this.toResponseDto(cv));
   }
@@ -181,6 +183,14 @@ export class CVController {
     const cv = await this.updateCVUseCase.updateCustomization({
       cvId: req.params.id,
       customization: req.body.customization,
+    });
+    res.json(this.toResponseDto(cv));
+  }
+
+  async updateTemplateLanguage(req: Request, res: Response): Promise<void> {
+    const cv = await this.updateCVUseCase.updateTemplateLanguage({
+      cvId: req.params.id,
+      templateLanguage: req.body.templateLanguage,
     });
     res.json(this.toResponseDto(cv));
   }

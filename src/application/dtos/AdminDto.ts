@@ -1,4 +1,4 @@
-import type { AdminRole } from '../../domain/entities/index.js';
+import type { AdminRole, TemplateLanguage } from '../../domain/entities/index.js';
 
 export interface AdminLoginDto {
   email: string;
@@ -20,6 +20,8 @@ export interface CreateTemplateDto {
   description: string;
   category: 'professional' | 'creative' | 'modern' | 'simple' | 'academic';
   edgeCode: string;
+  defaultLanguage?: TemplateLanguage;
+  availableLanguages?: TemplateLanguage[];
   features: {
     hasPhoto: boolean;
     hasSidebar: boolean;
@@ -39,6 +41,8 @@ export interface UpdateTemplateDto {
   description?: string;
   category?: 'professional' | 'creative' | 'modern' | 'simple' | 'academic';
   edgeCode?: string;
+  defaultLanguage?: TemplateLanguage;
+  availableLanguages?: TemplateLanguage[];
   features?: {
     hasPhoto?: boolean;
     hasSidebar?: boolean;
