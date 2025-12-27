@@ -13,7 +13,7 @@ model Template {
   description        String
   previewUrl         String?
   category           TemplateCategory
-  edgeCodes          Json     // { "default": "...", "fr": "...", "en": "..." }
+  edgeCodes          Json     @default("{}") // { "default": "...", "fr": "...", "en": "..." }
   defaultLanguage    String   @default("fr")
   availableLanguages String[] @default(["fr"])
   features           Json
