@@ -7,6 +7,10 @@ export class InMemoryTemplateRepository implements ITemplateRepository {
     return Array.from(store.getTemplates().values()).filter(t => t.isActive);
   }
 
+  async findAllWithEdgeCodes(): Promise<Template[]> {
+    return Array.from(store.getTemplates().values()).filter(t => t.isActive);
+  }
+
   async findById(id: string): Promise<Template | null> {
     const template = store.getTemplates().get(id);
     return template && template.isActive ? template : null;

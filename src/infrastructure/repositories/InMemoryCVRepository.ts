@@ -21,6 +21,10 @@ export class InMemoryCVRepository implements ICVRepository {
     return null;
   }
 
+  async findAll(): Promise<CV[]> {
+    return Array.from(store.getCVs().values());
+  }
+
   async update(cv: CV): Promise<CV> {
     store.getCVs().set(cv.id, cv);
     return cv;
