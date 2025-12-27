@@ -15,6 +15,7 @@ export function createCVRoutes(controller: CVController): Router {
 
   router.patch('/:id/personal-info', asyncHandler((req, res) => controller.updatePersonalInfo(req, res)));
   router.patch('/:id/summary', asyncHandler((req, res) => controller.updateSummary(req, res)));
+  router.patch('/:id/objective', asyncHandler((req, res) => controller.updateObjective(req, res)));
   router.patch('/:id/experiences', asyncHandler((req, res) => controller.updateExperiences(req, res)));
   router.patch('/:id/education', asyncHandler((req, res) => controller.updateEducation(req, res)));
   router.patch('/:id/skills', asyncHandler((req, res) => controller.updateSkills(req, res)));

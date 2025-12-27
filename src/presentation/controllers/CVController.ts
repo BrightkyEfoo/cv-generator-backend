@@ -69,6 +69,13 @@ export class CVController {
     const cv = await this.updateCVUseCase.updateSummary({
       cvId: req.params.id,
       summary: req.body.summary,
+    });
+    res.json(this.toResponseDto(cv));
+  }
+
+  async updateObjective(req: Request, res: Response): Promise<void> {
+    const cv = await this.updateCVUseCase.updateObjective({
+      cvId: req.params.id,
       objective: req.body.objective,
     });
     res.json(this.toResponseDto(cv));

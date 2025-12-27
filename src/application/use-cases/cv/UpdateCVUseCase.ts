@@ -45,7 +45,11 @@ export class UpdateCVUseCase {
     const cv = await this.getCV(dto.cvId);
     const updated = this.updateMetadata({
       ...cv,
-      personalInfo: dto.personalInfo,
+      personalInfo: {
+        ...cv.personalInfo,
+        ...dto.personalInfo,
+        socialLinks: dto.personalInfo.socialLinks ?? cv.personalInfo.socialLinks,
+      },
     });
     return this.cvRepository.update(updated);
   }
@@ -55,6 +59,14 @@ export class UpdateCVUseCase {
     const updated = this.updateMetadata({
       ...cv,
       summary: dto.summary,
+    });
+    return this.cvRepository.update(updated);
+  }
+
+  async updateObjective(dto: { cvId: string; objective?: string }): Promise<CV> {
+    const cv = await this.getCV(dto.cvId);
+    const updated = this.updateMetadata({
+      ...cv,
       objective: dto.objective,
     });
     return this.cvRepository.update(updated);
