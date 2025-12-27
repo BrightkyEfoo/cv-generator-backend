@@ -1,12 +1,15 @@
 import type { Request, Response } from 'express';
-import type { AdminAuthUseCase, ManageTemplatesUseCase } from '../../application/use-cases/index.js';
+import type { AdminAuthUseCase, ManageTemplatesUseCase, GetTemplatesUseCase } from '../../application/use-cases/index.js';
+import type { ICVRepository } from '../../domain/interfaces/index.js';
 import type { Template } from '../../domain/entities/index.js';
 import type { TemplateResponseDto } from '../../application/dtos/index.js';
 
 export class AdminController {
   constructor(
     private readonly authUseCase: AdminAuthUseCase,
-    private readonly manageTemplatesUseCase: ManageTemplatesUseCase
+    private readonly manageTemplatesUseCase: ManageTemplatesUseCase,
+    private readonly getTemplatesUseCase?: GetTemplatesUseCase,
+    private readonly cvRepository?: ICVRepository
   ) {}
 
   private toTemplateDto(template: Template): TemplateResponseDto {
@@ -51,5 +54,23 @@ export class AdminController {
   async regeneratePreview(req: Request, res: Response): Promise<void> {
     const previewUrl = await this.manageTemplatesUseCase.regeneratePreview(req.params.id);
     res.json({ previewUrl });
+  }
+
+  async listTemplates(req: Request, res: Response): Promise<void> {
+    if (!this.getTemplatesUseCase) {
+      res.status(500).json({ error: 'Templates use case not configured' });
+      return;
+    }
+    const templates = await this.getTemplatesUseCase.getAllWithEdgeCodes();
+    res.json(templates);
+  }
+
+  async listCVs(req: Request, res: Response): Promise<void> {
+    if (!this.cvRepository) {
+      res.status(500).json({ error: 'CV repository not configured' });
+      return;
+    }
+    const cvs = await this.cvRepository.findAll();
+    res.json(cvs);
   }
 }

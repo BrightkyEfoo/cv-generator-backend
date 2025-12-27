@@ -36,5 +36,17 @@ export function createAdminRoutes(
     asyncHandler((req, res) => controller.regeneratePreview(req, res))
   );
 
+  router.get(
+    '/templates',
+    requireAuth(['superadmin', 'admin']),
+    asyncHandler((req, res) => controller.listTemplates(req, res))
+  );
+
+  router.get(
+    '/cvs',
+    requireAuth(['superadmin', 'admin']),
+    asyncHandler((req, res) => controller.listCVs(req, res))
+  );
+
   return router;
 }

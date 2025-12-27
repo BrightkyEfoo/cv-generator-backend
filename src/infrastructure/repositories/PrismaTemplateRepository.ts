@@ -30,6 +30,14 @@ export class PrismaTemplateRepository implements ITemplateRepository {
     return templates.map(t => this.toDomain(t));
   }
 
+  async findAllWithEdgeCodes(): Promise<Template[]> {
+    const templates = await this.prisma.template.findMany({
+      where: { isActive: true },
+      orderBy: { name: 'asc' },
+    });
+    return templates.map(t => this.toDomain(t));
+  }
+
   async findById(id: string): Promise<Template | null> {
     const template = await this.prisma.template.findUnique({
       where: { id },

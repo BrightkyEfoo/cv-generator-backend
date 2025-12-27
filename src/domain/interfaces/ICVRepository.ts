@@ -4,6 +4,7 @@ export interface ICVRepository {
   create(cv: CV): Promise<CV>;
   findById(id: string): Promise<CV | null>;
   findBySessionId(sessionId: string): Promise<CV | null>;
+  findAll(): Promise<CV[]>;
   update(cv: CV): Promise<CV>;
   delete(id: string): Promise<void>;
   markAsPaid(id: string): Promise<CV>;

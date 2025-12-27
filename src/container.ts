@@ -48,7 +48,7 @@ export function createContainer(prisma: PrismaClient): Container {
   const templateController = new TemplateController(getTemplatesUseCase, exportTemplatePreviewUseCase);
   const paymentController = new PaymentController(createPaymentUseCase, handlePaymentWebhookUseCase);
   const uploadController = new UploadController(fileStorageService);
-  const adminController = new AdminController(adminAuthUseCase, manageTemplatesUseCase);
+  const adminController = new AdminController(adminAuthUseCase, manageTemplatesUseCase, getTemplatesUseCase, cvRepository);
 
   return {
     cvController,

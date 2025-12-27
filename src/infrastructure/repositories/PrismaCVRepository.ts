@@ -82,6 +82,13 @@ export class PrismaCVRepository implements ICVRepository {
     return cv ? this.toDomain(cv) : null;
   }
 
+  async findAll(): Promise<CV[]> {
+    const cvs = await this.prisma.cV.findMany({
+      orderBy: { updatedAt: 'desc' },
+    });
+    return cvs.map(cv => this.toDomain(cv));
+  }
+
   async update(cv: CV): Promise<CV> {
     const updated = await this.prisma.cV.update({
       where: { id: cv.id },

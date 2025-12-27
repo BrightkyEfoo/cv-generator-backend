@@ -9,6 +9,10 @@ export class GetTemplatesUseCase {
     return this.templateRepository.findAll();
   }
 
+  async getAllWithEdgeCodes(): Promise<Template[]> {
+    return this.templateRepository.findAllWithEdgeCodes();
+  }
+
   async getById(templateId: string): Promise<Template> {
     const template = await this.templateRepository.findById(templateId);
     if (!template) {

@@ -35,11 +35,14 @@ services:
       MAX_FILE_SIZE_MB: ${MAX_FILE_SIZE_MB:-5}
       ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      FREE_DOWNLOADS: ${FREE_DOWNLOADS:-false}
+      CV_EXPORT_DIR: /app/cv-exports
     ports:
       - "${PORT:-3001}:3001"
     volumes:
       - ./uploads:/app/uploads
       - ./public/previews:/app/public/previews
+      - ./cv-exports:/app/cv-exports
     depends_on:
       postgres:
         condition: service_healthy
