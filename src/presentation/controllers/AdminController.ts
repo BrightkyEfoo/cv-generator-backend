@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import type { AdminAuthUseCase, ManageTemplatesUseCase, GetTemplatesUseCase } from '../../application/use-cases/index.js';
+import type { AdminAuthUseCase, ManageTemplatesUseCase, GetTemplatesUseCase, ManageSettingsUseCase } from '../../application/use-cases/index.js';
 import type { ICVRepository } from '../../domain/interfaces/index.js';
 import type { Template } from '../../domain/entities/index.js';
 import type { TemplateResponseDto } from '../../application/dtos/index.js';
@@ -9,7 +9,8 @@ export class AdminController {
     private readonly authUseCase: AdminAuthUseCase,
     private readonly manageTemplatesUseCase: ManageTemplatesUseCase,
     private readonly getTemplatesUseCase?: GetTemplatesUseCase,
-    private readonly cvRepository?: ICVRepository
+    private readonly cvRepository?: ICVRepository,
+    private readonly manageSettingsUseCase?: ManageSettingsUseCase
   ) {}
 
   private toTemplateDto(template: Template): TemplateResponseDto {
@@ -72,5 +73,24 @@ export class AdminController {
     }
     const cvs = await this.cvRepository.findAll();
     res.json(cvs);
+  }
+
+  async getSettings(req: Request, res: Response): Promise<void> {
+    if (!this.manageSettingsUseCase) {
+      res.status(500).json({ error: 'Settings use case not configured' });
+      return;
+    }
+    const settings = await this.manageSettingsUseCase.getSettings();
+    res.json(settings);
+  }
+
+  async updateSettings(req: Request, res: Response): Promise<void> {
+    if (!this.manageSettingsUseCase) {
+      res.status(500).json({ error: 'Settings use case not configured' });
+      return;
+    }
+    const adminId = (req as Request & { adminId: string }).adminId;
+    const settings = await this.manageSettingsUseCase.updateSettings(req.body, adminId);
+    res.json(settings);
   }
 }

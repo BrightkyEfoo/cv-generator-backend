@@ -105,3 +105,10 @@ enum AdminRole {
   admin
   editor
 }
+
+model AppSettings {
+  id        String   @id @default("app_settings")
+  freeDownloads Boolean @default(false)
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+}

@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import compression from 'compression';
 import type { PrismaClient } from '@prisma/client';
 import { createContainer, type Container } from './container.js';
-import { createCVRoutes, createTemplateRoutes, createPaymentRoutes, createWebhookRoutes, createUploadRoutes, createAdminRoutes } from './presentation/routes/index.js';
+import { createCVRoutes, createTemplateRoutes, createPaymentRoutes, createWebhookRoutes, createUploadRoutes, createAdminRoutes, createSettingsRoutes } from './presentation/routes/index.js';
 import { errorHandler, sessionHandler, apiKeyHandler } from './presentation/middleware/index.js';
 
 export function createApp(prisma: PrismaClient): { app: express.Application; container: Container } {
@@ -50,6 +50,7 @@ export function createApp(prisma: PrismaClient): { app: express.Application; con
   app.use('/api/payments', createPaymentRoutes(container.paymentController));
   app.use('/api/uploads', createUploadRoutes(container.uploadController));
   app.use('/api/admin', createAdminRoutes(container.adminController, container.adminAuthUseCase));
+  app.use('/api/settings', createSettingsRoutes(container.appSettingsRepository));
 
   app.use('/uploads', express.static('uploads'));
   app.use('/previews', express.static('public/previews'));

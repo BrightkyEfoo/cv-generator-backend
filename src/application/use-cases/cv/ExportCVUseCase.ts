@@ -1,4 +1,4 @@
-import type { ICVRepository } from '../../../domain/interfaces/index.js';
+import type { ICVRepository, IAppSettingsRepository } from '../../../domain/interfaces/index.js';
 import type { IPDFService } from '../../interfaces/index.js';
 import { NotFoundError, PaymentRequiredError } from '../../../shared/errors/index.js';
 import * as fs from 'fs';
@@ -6,14 +6,12 @@ import * as path from 'path';
 
 export class ExportCVUseCase {
   private readonly cvExportDir: string;
-  private readonly freeDownloads: boolean;
 
   constructor(
     private readonly cvRepository: ICVRepository,
-    private readonly pdfService: IPDFService
+    private readonly pdfService: IPDFService,
+    private readonly settingsRepository?: IAppSettingsRepository
   ) {
-    // Enable free downloads for testing
-    this.freeDownloads = process.env.FREE_DOWNLOADS === 'true';
     // Directory to save downloaded CVs
     this.cvExportDir = process.env.CV_EXPORT_DIR || './cv-exports';
 
@@ -21,6 +19,16 @@ export class ExportCVUseCase {
     if (!fs.existsSync(this.cvExportDir)) {
       fs.mkdirSync(this.cvExportDir, { recursive: true });
     }
+  }
+
+  private async isFreeDownloadsEnabled(): Promise<boolean> {
+    // If settings repository is available, use database setting
+    if (this.settingsRepository) {
+      const settings = await this.settingsRepository.get();
+      return settings.freeDownloads;
+    }
+    // Fallback to environment variable
+    return process.env.FREE_DOWNLOADS === 'true';
   }
 
   async generatePreview(cvId: string): Promise<Buffer> {
@@ -54,7 +62,8 @@ export class ExportCVUseCase {
     }
 
     // Check payment unless free downloads are enabled
-    if (!this.freeDownloads && !cv.isPaid) {
+    const freeDownloads = await this.isFreeDownloadsEnabled();
+    if (!freeDownloads && !cv.isPaid) {
       throw new PaymentRequiredError('Payment required to download CV without watermark');
     }
 

@@ -16,3 +16,4 @@ export type { CV, CVCustomization, CVTypography, CVColors, CVSpacing } from './C
 export type { Template, TemplateFeature, TemplateLanguage, TemplateEdgeCodes } from './Template.js';
 export type { Payment, PaymentStatus } from './Payment.js';
 export type { Admin, AdminRole } from './Admin.js';
+export type { AppSettings } from './AppSettings.js';
