@@ -171,10 +171,22 @@
       line-height: 1.5;
     }
 
+    .exp-achievements {
+      margin-top: 8px;
+      padding-left: 15px;
+    }
+
+    .exp-achievements li {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-bottom: 4px;
+    }
+
     .bottom-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 25px;
+      margin-bottom: 25px;
     }
 
     .cert-item {
@@ -215,6 +227,167 @@
       color: #aaaacc;
     }
 
+    .lang-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 9pt;
+      color: #ccccdd;
+    }
+
+    .lang-level {
+      color: {{colors.primary}};
+    }
+
+    .project-item {
+      margin-bottom: 15px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #5a57a0;
+    }
+
+    .project-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .project-name {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .project-url {
+      font-size: 8pt;
+      color: {{colors.primary}};
+      margin-top: 3px;
+    }
+
+    .project-desc {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .project-tech {
+      font-size: 8pt;
+      color: #aaaacc;
+      margin-top: 5px;
+    }
+
+    .pub-item {
+      margin-bottom: 12px;
+    }
+
+    .pub-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .pub-info {
+      font-size: 8pt;
+      color: #aaaacc;
+      margin-top: 3px;
+    }
+
+    .award-item {
+      margin-bottom: 12px;
+    }
+
+    .award-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .award-info {
+      font-size: 8pt;
+      color: #aaaacc;
+      margin-top: 3px;
+    }
+
+    .award-desc {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-top: 5px;
+    }
+
+    .volunteer-item {
+      margin-bottom: 15px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #5a57a0;
+    }
+
+    .volunteer-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .volunteer-role {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .volunteer-org {
+      font-size: 9pt;
+      color: #aaaacc;
+    }
+
+    .volunteer-date {
+      font-size: 8pt;
+      color: {{colors.primary}};
+      margin-top: 3px;
+    }
+
+    .volunteer-desc {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .interest-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 9pt;
+      color: #ccccdd;
+    }
+
+    .interest-item::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: {{colors.primary}};
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .reference-item {
+      margin-bottom: 15px;
+    }
+
+    .reference-name {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .reference-title {
+      font-size: 9pt;
+      color: #aaaacc;
+    }
+
+    .reference-contact {
+      font-size: 8pt;
+      color: {{colors.primary}};
+      margin-top: 5px;
+    }
+
     .contact-bar {
       display: flex;
       justify-content: center;
@@ -247,88 +420,216 @@
           <div class="title">{{personalInfo.title}}</div>
         </div>
       </div>
-      {{#if personalInfo.photoUrl}}
+      @if(personalInfo.photoUrl)
       <img src="{{personalInfo.photoUrl}}" alt="Photo" class="photo">
-      {{/if}}
+      @endif
     </div>
 
+    @if(summary)
     <div class="summary-card">
       <p class="summary-text">{{summary}}</p>
     </div>
+    @endif
+
+    @if(objective)
+    <div class="summary-card">
+      <h2 class="card-title">Objective</h2>
+      <p class="summary-text">{{objective}}</p>
+    </div>
+    @endif
 
     <div class="content-grid">
+      @if(skills && skills.length)
       <div class="card">
         <h2 class="card-title">Skills</h2>
-        {{#each skills}}
+        @each(skill in skills)
         <div class="skill-category">
-          <div class="skill-category-name">{{this.name}}</div>
+          <div class="skill-category-name">{{skill.name}}</div>
           <div class="skill-dots">
             <span class="skill-dot"></span>
             <span class="skill-dot"></span>
             <span class="skill-dot"></span>
-            <span class="skill-dot {{#if (eq this.level 'beginner')}}empty{{/if}} {{#if (eq this.level 'intermediate')}}empty{{/if}}"></span>
-            <span class="skill-dot {{#if (neq this.level 'expert')}}empty{{/if}}"></span>
+            <span class="skill-dot @if(skill.level === 'beginner' || skill.level === 'intermediate')empty@endif"></span>
+            <span class="skill-dot @if(skill.level !== 'expert')empty@endif"></span>
           </div>
         </div>
-        {{/each}}
+        @endeach
       </div>
+      @endif
 
+      @if(experiences && experiences.length)
       <div class="card">
         <h2 class="card-title">Work Experience</h2>
-        {{#each experiences}}
+        @each(exp in experiences)
         <div class="experience-item">
           <div class="exp-header">
             <div>
-              <div class="exp-title">{{this.jobTitle}}</div>
-              <div class="exp-company">{{this.company}}</div>
+              <div class="exp-title">{{exp.jobTitle}}</div>
+              <div class="exp-company">{{exp.company}}</div>
             </div>
-            <div class="exp-date">{{this.startDate}}</div>
+            <div class="exp-date">{{exp.startDate}} - @if(exp.current)Present@else{{exp.endDate}}@endif</div>
           </div>
-          <p class="exp-desc">{{this.description}}</p>
+          @if(exp.description)
+          <p class="exp-desc">{{exp.description}}</p>
+          @endif
+          @if(exp.achievements && exp.achievements.length)
+          <ul class="exp-achievements">
+            @each(achievement in exp.achievements)
+            <li>{{achievement}}</li>
+            @endeach
+          </ul>
+          @endif
         </div>
-        {{/each}}
+        @endeach
       </div>
+      @endif
     </div>
 
     <div class="bottom-grid">
+      @if(certifications && certifications.length)
       <div class="card">
-        <h2 class="card-title">Certification</h2>
-        {{#each certifications}}
-        <div class="cert-item">{{this.name}}</div>
-        {{/each}}
+        <h2 class="card-title">Certifications</h2>
+        @each(cert in certifications)
+        <div class="cert-item">{{cert.name}} - {{cert.issuer}}</div>
+        @endeach
       </div>
+      @endif
 
+      @if(education && education.length)
       <div class="card">
         <h2 class="card-title">Education</h2>
-        {{#each education}}
+        @each(edu in education)
         <div class="edu-item">
-          <div class="edu-date">{{this.endDate}}</div>
-          <div class="edu-degree">{{this.institution}}</div>
-          <div class="edu-school">{{this.degree}} in {{this.field}}</div>
+          <div class="edu-date">{{edu.startDate}} - @if(edu.current)Present@else{{edu.endDate}}@endif</div>
+          <div class="edu-degree">{{edu.institution}}</div>
+          <div class="edu-school">{{edu.degree}} in {{edu.field}}</div>
         </div>
-        {{/each}}
+        @endeach
       </div>
+      @endif
     </div>
 
+    @if(languages && languages.length)
+    <div class="bottom-grid">
+      <div class="card">
+        <h2 class="card-title">Languages</h2>
+        @each(lang in languages)
+        <div class="lang-item">
+          <span>{{lang.name}}</span>
+          <span class="lang-level">{{lang.proficiency}}</span>
+        </div>
+        @endeach
+      </div>
+
+      @if(interests && interests.length)
+      <div class="card">
+        <h2 class="card-title">Interests</h2>
+        @each(interest in interests)
+        <div class="interest-item">{{interest.name}}</div>
+        @endeach
+      </div>
+      @endif
+    </div>
+    @endif
+
+    @if(projects && projects.length)
+    <div class="card" style="margin-bottom: 25px;">
+      <h2 class="card-title">Projects</h2>
+      @each(project in projects)
+      <div class="project-item">
+        <div class="project-name">{{project.name}}</div>
+        @if(project.url)
+        <div class="project-url">{{project.url}}</div>
+        @endif
+        @if(project.description)
+        <p class="project-desc">{{project.description}}</p>
+        @endif
+        @if(project.technologies && project.technologies.length)
+        <div class="project-tech">Technologies: {{project.technologies.join(', ')}}</div>
+        @endif
+      </div>
+      @endeach
+    </div>
+    @endif
+
+    @if(publications && publications.length)
+    <div class="card" style="margin-bottom: 25px;">
+      <h2 class="card-title">Publications</h2>
+      @each(pub in publications)
+      <div class="pub-item">
+        <div class="pub-title">{{pub.title}}</div>
+        <div class="pub-info">{{pub.publisher}} - {{pub.publicationDate}}</div>
+        @if(pub.description)
+        <p class="project-desc">{{pub.description}}</p>
+        @endif
+      </div>
+      @endeach
+    </div>
+    @endif
+
+    @if(awards && awards.length)
+    <div class="card" style="margin-bottom: 25px;">
+      <h2 class="card-title">Awards</h2>
+      @each(award in awards)
+      <div class="award-item">
+        <div class="award-title">{{award.title}}</div>
+        <div class="award-info">{{award.issuer}} - {{award.date}}</div>
+        @if(award.description)
+        <p class="award-desc">{{award.description}}</p>
+        @endif
+      </div>
+      @endeach
+    </div>
+    @endif
+
+    @if(volunteer && volunteer.length)
+    <div class="card" style="margin-bottom: 25px;">
+      <h2 class="card-title">Volunteer Experience</h2>
+      @each(vol in volunteer)
+      <div class="volunteer-item">
+        <div class="volunteer-role">{{vol.role}}</div>
+        <div class="volunteer-org">{{vol.organization}}</div>
+        <div class="volunteer-date">{{vol.startDate}} - @if(vol.current)Present@else{{vol.endDate}}@endif</div>
+        @if(vol.description)
+        <p class="volunteer-desc">{{vol.description}}</p>
+        @endif
+      </div>
+      @endeach
+    </div>
+    @endif
+
+    @if(references && references.length)
+    <div class="card" style="margin-bottom: 25px;">
+      <h2 class="card-title">References</h2>
+      @each(ref in references)
+      <div class="reference-item">
+        <div class="reference-name">{{ref.name}}</div>
+        <div class="reference-title">{{ref.title}}, {{ref.company}}</div>
+        <div class="reference-contact">{{ref.email}} @if(ref.phone)| {{ref.phone}}@endif</div>
+      </div>
+      @endeach
+    </div>
+    @endif
+
     <div class="contact-bar">
-      {{#if personalInfo.phone}}
+      @if(personalInfo.phone)
       <div class="contact-item">
         <span class="contact-icon">T</span>
         {{personalInfo.phone}}
       </div>
-      {{/if}}
-      {{#if personalInfo.email}}
+      @endif
+      @if(personalInfo.email)
       <div class="contact-item">
         <span class="contact-icon">@</span>
         {{personalInfo.email}}
       </div>
-      {{/if}}
-      {{#each personalInfo.socialLinks}}
+      @endif
+      @each(link in personalInfo.socialLinks)
       <div class="contact-item">
         <span class="contact-icon">W</span>
-        {{this.label}}
+        {{link.label}}
       </div>
-      {{/each}}
+      @endeach
     </div>
   </div>
 </body>

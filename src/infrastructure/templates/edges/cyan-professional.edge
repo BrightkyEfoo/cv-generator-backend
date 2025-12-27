@@ -165,6 +165,59 @@
       margin-bottom: 5px;
     }
 
+    .cert-item {
+      margin-bottom: 10px;
+    }
+
+    .cert-name {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .cert-info {
+      font-size: 8pt;
+      color: #aabbcc;
+    }
+
+    .interest-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 9pt;
+      color: #aabbcc;
+    }
+
+    .interest-item::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: {{colors.primary}};
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .reference-item {
+      margin-bottom: 12px;
+    }
+
+    .reference-name {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .reference-title {
+      font-size: 8pt;
+      color: #aabbcc;
+    }
+
+    .reference-contact {
+      font-size: 8pt;
+      color: {{colors.primary}};
+      margin-top: 3px;
+    }
+
     .main-section {
       padding: 25px 40px;
     }
@@ -227,54 +280,205 @@
       color: {{colors.text}};
       margin-bottom: 5px;
     }
+
+    .project-item {
+      margin-bottom: 20px;
+    }
+
+    .project-name {
+      font-size: 10pt;
+      font-weight: 700;
+      color: {{colors.headings}};
+    }
+
+    .project-url {
+      font-size: 8pt;
+      color: {{colors.primary}};
+      margin-top: 3px;
+    }
+
+    .project-desc {
+      font-size: 9pt;
+      color: {{colors.text}};
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .project-tech {
+      font-size: 8pt;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .pub-item {
+      margin-bottom: 15px;
+    }
+
+    .pub-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: {{colors.headings}};
+    }
+
+    .pub-info {
+      font-size: 8pt;
+      color: #666;
+      margin-top: 3px;
+    }
+
+    .pub-desc {
+      font-size: 9pt;
+      color: {{colors.text}};
+      margin-top: 5px;
+    }
+
+    .award-item {
+      margin-bottom: 15px;
+    }
+
+    .award-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: {{colors.headings}};
+    }
+
+    .award-info {
+      font-size: 8pt;
+      color: #666;
+      margin-top: 3px;
+    }
+
+    .award-desc {
+      font-size: 9pt;
+      color: {{colors.text}};
+      margin-top: 5px;
+    }
+
+    .volunteer-item {
+      margin-bottom: 20px;
+    }
+
+    .volunteer-role {
+      font-size: 10pt;
+      font-weight: 700;
+      color: {{colors.headings}};
+    }
+
+    .volunteer-org {
+      font-size: 9pt;
+      color: #666;
+      font-style: italic;
+    }
+
+    .volunteer-date {
+      font-size: 8pt;
+      color: {{colors.primary}};
+      margin-top: 3px;
+    }
+
+    .volunteer-desc {
+      font-size: 9pt;
+      color: {{colors.text}};
+      margin-top: 5px;
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
   <div class="cv-container">
     <div class="sidebar">
-      {{#if personalInfo.photoUrl}}
+      @if(personalInfo.photoUrl)
       <div class="photo-section">
         <img src="{{personalInfo.photoUrl}}" alt="Photo" class="photo">
       </div>
-      {{/if}}
+      @endif
 
+      @if(summary)
       <div class="sidebar-section">
         <h2 class="sidebar-title">Profile</h2>
         <p class="profile-text">{{summary}}</p>
       </div>
+      @endif
 
+      @if(objective)
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Objective</h2>
+        <p class="profile-text">{{objective}}</p>
+      </div>
+      @endif
+
+      @if(education && education.length)
       <div class="sidebar-section">
         <h2 class="sidebar-title">Education</h2>
-        {{#each education}}
+        @each(edu in education)
         <div class="edu-item">
-          <div class="edu-degree">{{this.degree}}</div>
-          <div class="edu-school">{{this.institution}}</div>
-          <div class="edu-date">{{this.startDate}} - {{this.endDate}}</div>
+          <div class="edu-degree">{{edu.degree}}</div>
+          <div class="edu-school">{{edu.institution}}</div>
+          <div class="edu-date">{{edu.startDate}} - @if(edu.current)Present@else{{edu.endDate}}@endif</div>
         </div>
-        {{/each}}
+        @endeach
       </div>
+      @endif
 
+      @if(skills && skills.length)
       <div class="sidebar-section">
         <h2 class="sidebar-title">Skills</h2>
-        {{#each skills}}
+        @each(skill in skills)
         <div class="skill-item">
-          <div class="skill-name">{{this.name}}</div>
+          <div class="skill-name">{{skill.name}}</div>
           <div class="skill-bar">
-            <div class="skill-progress" style="width: {{#if (eq this.level 'expert')}}100%{{else}}{{#if (eq this.level 'advanced')}}80%{{else}}{{#if (eq this.level 'intermediate')}}60%{{else}}40%{{/if}}{{/if}}{{/if}}"></div>
+            <div class="skill-progress" style="width: @if(skill.level === 'expert')100%@elseif(skill.level === 'advanced')80%@elseif(skill.level === 'intermediate')60%@else40%@endif"></div>
           </div>
         </div>
-        {{/each}}
+        @endeach
       </div>
+      @endif
 
+      @if(languages && languages.length)
       <div class="sidebar-section">
         <h2 class="sidebar-title">Languages</h2>
-        {{#each languages}}
+        @each(lang in languages)
         <div class="language-item">
-          <span>{{this.name}}</span>
-          <span>{{this.proficiency}}</span>
+          <span>{{lang.name}}</span>
+          <span>{{lang.proficiency}}</span>
         </div>
-        {{/each}}
+        @endeach
       </div>
+      @endif
+
+      @if(certifications && certifications.length)
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Certifications</h2>
+        @each(cert in certifications)
+        <div class="cert-item">
+          <div class="cert-name">{{cert.name}}</div>
+          <div class="cert-info">{{cert.issuer}} - {{cert.issueDate}}</div>
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(interests && interests.length)
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">Interests</h2>
+        @each(interest in interests)
+        <div class="interest-item">{{interest.name}}</div>
+        @endeach
+      </div>
+      @endif
+
+      @if(references && references.length)
+      <div class="sidebar-section">
+        <h2 class="sidebar-title">References</h2>
+        @each(ref in references)
+        <div class="reference-item">
+          <div class="reference-name">{{ref.name}}</div>
+          <div class="reference-title">{{ref.title}}, {{ref.company}}</div>
+          <div class="reference-contact">{{ref.email}}</div>
+        </div>
+        @endeach
+      </div>
+      @endif
     </div>
 
     <div class="main-content">
@@ -282,49 +486,119 @@
         <h1 class="name">{{personalInfo.firstName}} {{personalInfo.lastName}}</h1>
         <div class="title">{{personalInfo.title}}</div>
         <div class="header-contact">
-          {{#if personalInfo.phone}}
+          @if(personalInfo.phone)
           <div class="header-contact-item">
             <span class="header-contact-icon">T</span>
             {{personalInfo.phone}}
           </div>
-          {{/if}}
-          {{#if personalInfo.email}}
+          @endif
+          @if(personalInfo.email)
           <div class="header-contact-item">
             <span class="header-contact-icon">@</span>
             {{personalInfo.email}}
           </div>
-          {{/if}}
-          {{#if personalInfo.city}}
+          @endif
+          @if(personalInfo.city)
           <div class="header-contact-item">
             <span class="header-contact-icon">A</span>
             {{personalInfo.city}}, {{personalInfo.country}}
           </div>
-          {{/if}}
+          @endif
         </div>
       </div>
 
+      @if(experiences && experiences.length)
       <div class="main-section">
         <h2 class="main-title">Work Experience</h2>
-        {{#each experiences}}
+        @each(exp in experiences)
         <div class="experience-item">
           <div class="exp-header">
             <div>
-              <div class="exp-position">{{this.jobTitle}}</div>
-              <div class="exp-company">{{this.company}}{{#if this.location}}, {{this.location}}{{/if}}</div>
+              <div class="exp-position">{{exp.jobTitle}}</div>
+              <div class="exp-company">{{exp.company}}@if(exp.location), {{exp.location}}@endif</div>
             </div>
-            <div class="exp-date">{{this.startDate}} - {{#if this.current}}Present{{else}}{{this.endDate}}{{/if}}</div>
+            <div class="exp-date">{{exp.startDate}} - @if(exp.current)Present@else{{exp.endDate}}@endif</div>
           </div>
-          <p class="exp-desc">{{this.description}}</p>
-          {{#if this.achievements.length}}
+          @if(exp.description)
+          <p class="exp-desc">{{exp.description}}</p>
+          @endif
+          @if(exp.achievements && exp.achievements.length)
           <ul class="exp-achievements">
-            {{#each this.achievements}}
-            <li>{{this}}</li>
-            {{/each}}
+            @each(achievement in exp.achievements)
+            <li>{{achievement}}</li>
+            @endeach
           </ul>
-          {{/if}}
+          @endif
         </div>
-        {{/each}}
+        @endeach
       </div>
+      @endif
+
+      @if(projects && projects.length)
+      <div class="main-section">
+        <h2 class="main-title">Projects</h2>
+        @each(project in projects)
+        <div class="project-item">
+          <div class="project-name">{{project.name}}</div>
+          @if(project.url)
+          <div class="project-url">{{project.url}}</div>
+          @endif
+          @if(project.description)
+          <p class="project-desc">{{project.description}}</p>
+          @endif
+          @if(project.technologies && project.technologies.length)
+          <div class="project-tech">Technologies: {{project.technologies.join(', ')}}</div>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(publications && publications.length)
+      <div class="main-section">
+        <h2 class="main-title">Publications</h2>
+        @each(pub in publications)
+        <div class="pub-item">
+          <div class="pub-title">{{pub.title}}</div>
+          <div class="pub-info">{{pub.publisher}} - {{pub.publicationDate}}</div>
+          @if(pub.description)
+          <p class="pub-desc">{{pub.description}}</p>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(awards && awards.length)
+      <div class="main-section">
+        <h2 class="main-title">Awards</h2>
+        @each(award in awards)
+        <div class="award-item">
+          <div class="award-title">{{award.title}}</div>
+          <div class="award-info">{{award.issuer}} - {{award.date}}</div>
+          @if(award.description)
+          <p class="award-desc">{{award.description}}</p>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(volunteer && volunteer.length)
+      <div class="main-section">
+        <h2 class="main-title">Volunteer Experience</h2>
+        @each(vol in volunteer)
+        <div class="volunteer-item">
+          <div class="volunteer-role">{{vol.role}}</div>
+          <div class="volunteer-org">{{vol.organization}}</div>
+          <div class="volunteer-date">{{vol.startDate}} - @if(vol.current)Present@else{{vol.endDate}}@endif</div>
+          @if(vol.description)
+          <p class="volunteer-desc">{{vol.description}}</p>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
     </div>
   </div>
 </body>

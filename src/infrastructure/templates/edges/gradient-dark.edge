@@ -129,6 +129,13 @@
       color: #aaaacc;
     }
 
+    .edu-desc {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
     .experience-item {
       margin-bottom: 25px;
       padding-left: 15px;
@@ -153,6 +160,13 @@
       color: #aaaacc;
     }
 
+    .exp-desc {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
     .exp-achievements {
       margin-top: 10px;
       padding-left: 15px;
@@ -162,6 +176,176 @@
       font-size: 9pt;
       color: #ccccdd;
       margin-bottom: 5px;
+    }
+
+    .lang-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 9pt;
+      color: #ccccdd;
+    }
+
+    .lang-level {
+      color: {{ colors.primary }};
+    }
+
+    .cert-item {
+      margin-bottom: 12px;
+      padding-left: 15px;
+      border-left: 2px solid {{ colors.primary }};
+    }
+
+    .cert-name {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .cert-info {
+      font-size: 8pt;
+      color: #aaaacc;
+      margin-top: 3px;
+    }
+
+    .project-item {
+      margin-bottom: 20px;
+      padding-left: 15px;
+      border-left: 2px solid {{ colors.primary }};
+    }
+
+    .project-name {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .project-url {
+      font-size: 8pt;
+      color: {{ colors.primary }};
+      margin-top: 3px;
+    }
+
+    .project-desc {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .project-tech {
+      font-size: 8pt;
+      color: #aaaacc;
+      margin-top: 5px;
+    }
+
+    .pub-item {
+      margin-bottom: 15px;
+      padding-left: 15px;
+      border-left: 2px solid {{ colors.primary }};
+    }
+
+    .pub-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .pub-info {
+      font-size: 8pt;
+      color: #aaaacc;
+      margin-top: 3px;
+    }
+
+    .pub-desc {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-top: 5px;
+    }
+
+    .award-item {
+      margin-bottom: 15px;
+      padding-left: 15px;
+      border-left: 2px solid {{ colors.primary }};
+    }
+
+    .award-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .award-info {
+      font-size: 8pt;
+      color: #aaaacc;
+      margin-top: 3px;
+    }
+
+    .award-desc {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-top: 5px;
+    }
+
+    .volunteer-item {
+      margin-bottom: 20px;
+      padding-left: 15px;
+      border-left: 2px solid {{ colors.primary }};
+    }
+
+    .volunteer-role {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .volunteer-org {
+      font-size: 9pt;
+      color: #aaaacc;
+    }
+
+    .volunteer-date {
+      font-size: 8pt;
+      color: {{ colors.primary }};
+      margin-top: 3px;
+    }
+
+    .volunteer-desc {
+      font-size: 9pt;
+      color: #ccccdd;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .interest-tag {
+      border: 1px solid {{ colors.primary }};
+      border-radius: 20px;
+      padding: 8px 15px;
+      font-size: 9pt;
+      color: #ffffff;
+    }
+
+    .reference-item {
+      margin-bottom: 15px;
+      padding-left: 15px;
+      border-left: 2px solid {{ colors.primary }};
+    }
+
+    .reference-name {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .reference-title {
+      font-size: 9pt;
+      color: #aaaacc;
+    }
+
+    .reference-contact {
+      font-size: 8pt;
+      color: {{ colors.primary }};
+      margin-top: 3px;
     }
 
     .contact-section {
@@ -204,11 +388,21 @@
       </div>
       @endif
 
+      @if(summary)
       <div class="section">
         <h2 class="section-title">About</h2>
         <p class="about-text">{{ summary }}</p>
       </div>
+      @endif
 
+      @if(objective)
+      <div class="section">
+        <h2 class="section-title">Objective</h2>
+        <p class="about-text">{{ objective }}</p>
+      </div>
+      @endif
+
+      @if(skills && skills.length)
       <div class="section">
         <h2 class="section-title">Skills</h2>
         <div class="skill-grid">
@@ -217,17 +411,58 @@
           @endeach
         </div>
       </div>
+      @endif
 
+      @if(education && education.length)
       <div class="section">
         <h2 class="section-title">Education</h2>
         @each(edu in education)
         <div class="education-item">
-          <div class="edu-date">{{ edu.startDate }} - {{ edu.endDate }}</div>
+          <div class="edu-date">{{ edu.startDate }} - @if(edu.current)Present@else{{ edu.endDate }}@endif</div>
           <div class="edu-degree">{{ edu.degree }}</div>
           <div class="edu-school">{{ edu.institution }}</div>
+          @if(edu.description)
+          <p class="edu-desc">{{ edu.description }}</p>
+          @endif
         </div>
         @endeach
       </div>
+      @endif
+
+      @if(languages && languages.length)
+      <div class="section">
+        <h2 class="section-title">Languages</h2>
+        @each(lang in languages)
+        <div class="lang-item">
+          <span>{{ lang.name }}</span>
+          <span class="lang-level">{{ lang.proficiency }}</span>
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(certifications && certifications.length)
+      <div class="section">
+        <h2 class="section-title">Certifications</h2>
+        @each(cert in certifications)
+        <div class="cert-item">
+          <div class="cert-name">{{ cert.name }}</div>
+          <div class="cert-info">{{ cert.issuer }} - {{ cert.issueDate }}</div>
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(interests && interests.length)
+      <div class="section">
+        <h2 class="section-title">Interests</h2>
+        <div class="skill-grid">
+          @each(interest in interests)
+          <span class="interest-tag">{{ interest.name }}</span>
+          @endeach
+        </div>
+      </div>
+      @endif
 
       <div class="contact-section">
         <h2 class="section-title">Contact</h2>
@@ -243,6 +478,12 @@
           {{ personalInfo.email }}
         </div>
         @endif
+        @if(personalInfo.city)
+        <div class="contact-item">
+          <span class="contact-icon">A</span>
+          {{ personalInfo.city }}, {{ personalInfo.country }}
+        </div>
+        @endif
         @each(link in personalInfo.socialLinks)
         <div class="contact-item">
           <span class="contact-icon">{{ link.platform[0] }}</span>
@@ -253,13 +494,17 @@
     </div>
 
     <div class="right-column">
+      @if(experiences && experiences.length)
       <div class="section">
         <h2 class="section-title">Experience</h2>
         @each(exp in experiences)
         <div class="experience-item">
-          <div class="exp-date">{{ exp.startDate }} - {{ exp.current ? 'Present' : exp.endDate }}</div>
+          <div class="exp-date">{{ exp.startDate }} - @if(exp.current)Present@else{{ exp.endDate }}@endif</div>
           <div class="exp-title">{{ exp.jobTitle }}</div>
-          <div class="exp-company">{{ exp.company }}</div>
+          <div class="exp-company">{{ exp.company }}@if(exp.location), {{ exp.location }}@endif</div>
+          @if(exp.description)
+          <p class="exp-desc">{{ exp.description }}</p>
+          @endif
           @if(exp.achievements && exp.achievements.length)
           <ul class="exp-achievements">
             @each(achievement in exp.achievements)
@@ -270,6 +515,86 @@
         </div>
         @endeach
       </div>
+      @endif
+
+      @if(projects && projects.length)
+      <div class="section">
+        <h2 class="section-title">Projects</h2>
+        @each(project in projects)
+        <div class="project-item">
+          <div class="project-name">{{ project.name }}</div>
+          @if(project.url)
+          <div class="project-url">{{ project.url }}</div>
+          @endif
+          @if(project.description)
+          <p class="project-desc">{{ project.description }}</p>
+          @endif
+          @if(project.technologies && project.technologies.length)
+          <div class="project-tech">Technologies: {{ project.technologies.join(', ') }}</div>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(publications && publications.length)
+      <div class="section">
+        <h2 class="section-title">Publications</h2>
+        @each(pub in publications)
+        <div class="pub-item">
+          <div class="pub-title">{{ pub.title }}</div>
+          <div class="pub-info">{{ pub.publisher }} - {{ pub.publicationDate }}</div>
+          @if(pub.description)
+          <p class="pub-desc">{{ pub.description }}</p>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(awards && awards.length)
+      <div class="section">
+        <h2 class="section-title">Awards</h2>
+        @each(award in awards)
+        <div class="award-item">
+          <div class="award-title">{{ award.title }}</div>
+          <div class="award-info">{{ award.issuer }} - {{ award.date }}</div>
+          @if(award.description)
+          <p class="award-desc">{{ award.description }}</p>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(volunteer && volunteer.length)
+      <div class="section">
+        <h2 class="section-title">Volunteer Experience</h2>
+        @each(vol in volunteer)
+        <div class="volunteer-item">
+          <div class="volunteer-role">{{ vol.role }}</div>
+          <div class="volunteer-org">{{ vol.organization }}</div>
+          <div class="volunteer-date">{{ vol.startDate }} - @if(vol.current)Present@else{{ vol.endDate }}@endif</div>
+          @if(vol.description)
+          <p class="volunteer-desc">{{ vol.description }}</p>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(references && references.length)
+      <div class="section">
+        <h2 class="section-title">References</h2>
+        @each(ref in references)
+        <div class="reference-item">
+          <div class="reference-name">{{ ref.name }}</div>
+          <div class="reference-title">{{ ref.title }}, {{ ref.company }}</div>
+          <div class="reference-contact">{{ ref.email }}@if(ref.phone) | {{ ref.phone }}@endif</div>
+        </div>
+        @endeach
+      </div>
+      @endif
     </div>
   </div>
 </body>

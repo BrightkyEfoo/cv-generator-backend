@@ -9,13 +9,16 @@ const __dirname = dirname(__filename);
 export interface TemplateData {
   personalInfo: CV['personalInfo'];
   summary: string;
+  objective: string;
   experiences: CV['experiences'];
   education: CV['education'];
   skills: CV['skills'];
   languages: CV['languages'];
   certifications: CV['certifications'];
   projects: CV['projects'];
+  publications: CV['publications'];
   awards: CV['awards'];
+  volunteer: CV['volunteer'];
   interests: CV['interests'];
   references: CV['references'];
   customSections: CV['customSections'];

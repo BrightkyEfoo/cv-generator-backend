@@ -120,6 +120,17 @@
       line-height: 1.5;
     }
 
+    .timeline-achievements {
+      margin-top: 8px;
+      padding-left: 15px;
+    }
+
+    .timeline-achievements li {
+      font-size: 8pt;
+      color: #8899aa;
+      margin-bottom: 3px;
+    }
+
     .contact-item {
       display: flex;
       align-items: center;
@@ -142,18 +153,152 @@
       color: {{colors.primary}};
     }
 
-    .desk-illustration {
+    .middle-section {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 30px 0;
-      padding: 20px;
+      justify-content: space-between;
+      margin-bottom: 40px;
     }
 
-    .desk-svg {
-      width: 100%;
-      max-width: 500px;
-      height: auto;
+    .middle-col {
+      width: 48%;
+    }
+
+    .lang-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 9pt;
+      color: #aabbcc;
+    }
+
+    .lang-level {
+      color: {{colors.primary}};
+    }
+
+    .cert-item {
+      margin-bottom: 12px;
+    }
+
+    .cert-name {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .cert-info {
+      font-size: 8pt;
+      color: #8899aa;
+      margin-top: 3px;
+    }
+
+    .project-item {
+      margin-bottom: 15px;
+    }
+
+    .project-name {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .project-url {
+      font-size: 8pt;
+      color: {{colors.primary}};
+      margin-top: 3px;
+    }
+
+    .project-desc {
+      font-size: 8pt;
+      color: #8899aa;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .project-tech {
+      font-size: 8pt;
+      color: #6677aa;
+      margin-top: 3px;
+    }
+
+    .pub-item {
+      margin-bottom: 12px;
+    }
+
+    .pub-title {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .pub-info {
+      font-size: 8pt;
+      color: #8899aa;
+      margin-top: 3px;
+    }
+
+    .award-item {
+      margin-bottom: 12px;
+    }
+
+    .award-title {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .award-info {
+      font-size: 8pt;
+      color: #8899aa;
+      margin-top: 3px;
+    }
+
+    .volunteer-item {
+      margin-bottom: 15px;
+    }
+
+    .volunteer-role {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .volunteer-org {
+      font-size: 8pt;
+      color: #8899aa;
+    }
+
+    .volunteer-date {
+      font-size: 8pt;
+      color: {{colors.primary}};
+      margin-top: 3px;
+    }
+
+    .volunteer-desc {
+      font-size: 8pt;
+      color: #8899aa;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    .reference-item {
+      margin-bottom: 12px;
+    }
+
+    .reference-name {
+      font-size: 9pt;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .reference-title {
+      font-size: 8pt;
+      color: #8899aa;
+    }
+
+    .reference-contact {
+      font-size: 8pt;
+      color: {{colors.primary}};
+      margin-top: 3px;
     }
 
     .bottom-section {
@@ -221,14 +366,26 @@
 
     <div class="top-section">
       <div class="experience-col">
+        @if(experiences && experiences.length)
         <h2 class="section-title">Experience</h2>
         @each(exp in experiences)
         <div class="timeline-item">
           <div class="timeline-date">{{exp.startDate}} - @if(exp.current)Present@else{{exp.endDate}}@endif</div>
           <div class="timeline-title">{{exp.jobTitle}}</div>
-          <div class="timeline-desc">{{exp.company}}<br>{{exp.description}}</div>
+          <div class="timeline-desc">{{exp.company}}@if(exp.location), {{exp.location}}@endif</div>
+          @if(exp.description)
+          <div class="timeline-desc">{{exp.description}}</div>
+          @endif
+          @if(exp.achievements && exp.achievements.length)
+          <ul class="timeline-achievements">
+            @each(achievement in exp.achievements)
+            <li>{{achievement}}</li>
+            @endeach
+          </ul>
+          @endif
         </div>
         @endeach
+        @endif
       </div>
 
       <div class="center-col">
@@ -237,7 +394,12 @@
           <img src="{{personalInfo.photoUrl}}" alt="Photo" class="photo">
         </div>
         @endif
+        @if(summary)
         <p class="summary">{{summary}}</p>
+        @endif
+        @if(objective)
+        <p class="summary" style="margin-top: 15px;">{{objective}}</p>
+        @endif
       </div>
 
       <div class="contact-col">
@@ -269,30 +431,149 @@
       </div>
     </div>
 
-    <div class="bottom-section">
-      <div class="bottom-col">
-        <h2 class="section-title">Formation</h2>
-        @each(edu in education)
-        <div class="timeline-item">
-          <div class="timeline-date">{{edu.startDate}} - {{edu.endDate}}</div>
-          <div class="timeline-title">{{edu.degree}}</div>
-          <div class="timeline-desc">{{edu.institution}}<br>{{edu.field}}</div>
+    @if((languages && languages.length) || (certifications && certifications.length) || (projects && projects.length))
+    <div class="middle-section">
+      @if(languages && languages.length)
+      <div class="middle-col">
+        <h2 class="section-title">Languages</h2>
+        @each(lang in languages)
+        <div class="lang-item">
+          <span>{{lang.name}}</span>
+          <span class="lang-level">{{lang.proficiency}}</span>
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(certifications && certifications.length)
+      <div class="middle-col">
+        <h2 class="section-title">Certifications</h2>
+        @each(cert in certifications)
+        <div class="cert-item">
+          <div class="cert-name">{{cert.name}}</div>
+          <div class="cert-info">{{cert.issuer}} - {{cert.issueDate}}</div>
+        </div>
+        @endeach
+      </div>
+      @endif
+    </div>
+    @endif
+
+    @if(projects && projects.length)
+    <div class="middle-section">
+      <div class="middle-col">
+        <h2 class="section-title">Projects</h2>
+        @each(project in projects)
+        <div class="project-item">
+          <div class="project-name">{{project.name}}</div>
+          @if(project.url)
+          <div class="project-url">{{project.url}}</div>
+          @endif
+          @if(project.description)
+          <p class="project-desc">{{project.description}}</p>
+          @endif
+          @if(project.technologies && project.technologies.length)
+          <div class="project-tech">{{project.technologies.join(', ')}}</div>
+          @endif
         </div>
         @endeach
       </div>
 
+      @if(publications && publications.length)
+      <div class="middle-col">
+        <h2 class="section-title">Publications</h2>
+        @each(pub in publications)
+        <div class="pub-item">
+          <div class="pub-title">{{pub.title}}</div>
+          <div class="pub-info">{{pub.publisher}} - {{pub.publicationDate}}</div>
+        </div>
+        @endeach
+      </div>
+      @endif
+    </div>
+    @endif
+
+    @if((awards && awards.length) || (volunteer && volunteer.length))
+    <div class="middle-section">
+      @if(awards && awards.length)
+      <div class="middle-col">
+        <h2 class="section-title">Awards</h2>
+        @each(award in awards)
+        <div class="award-item">
+          <div class="award-title">{{award.title}}</div>
+          <div class="award-info">{{award.issuer}} - {{award.date}}</div>
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(volunteer && volunteer.length)
+      <div class="middle-col">
+        <h2 class="section-title">Volunteer</h2>
+        @each(vol in volunteer)
+        <div class="volunteer-item">
+          <div class="volunteer-role">{{vol.role}}</div>
+          <div class="volunteer-org">{{vol.organization}}</div>
+          <div class="volunteer-date">{{vol.startDate}} - @if(vol.current)Present@else{{vol.endDate}}@endif</div>
+          @if(vol.description)
+          <p class="volunteer-desc">{{vol.description}}</p>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+    </div>
+    @endif
+
+    @if(references && references.length)
+    <div class="middle-section">
+      <div class="middle-col">
+        <h2 class="section-title">References</h2>
+        @each(ref in references)
+        <div class="reference-item">
+          <div class="reference-name">{{ref.name}}</div>
+          <div class="reference-title">{{ref.title}}, {{ref.company}}</div>
+          <div class="reference-contact">{{ref.email}}@if(ref.phone) | {{ref.phone}}@endif</div>
+        </div>
+        @endeach
+      </div>
+    </div>
+    @endif
+
+    <div class="bottom-section">
+      @if(education && education.length)
       <div class="bottom-col">
-        <h2 class="section-title">Atouts</h2>
+        <h2 class="section-title">Education</h2>
+        @each(edu in education)
+        <div class="timeline-item">
+          <div class="timeline-date">{{edu.startDate}} - @if(edu.current)Present@else{{edu.endDate}}@endif</div>
+          <div class="timeline-title">{{edu.degree}}</div>
+          <div class="timeline-desc">{{edu.institution}}</div>
+          @if(edu.field)
+          <div class="timeline-desc">{{edu.field}}</div>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @endif
+
+      @if(interests && interests.length)
+      <div class="bottom-col">
+        <h2 class="section-title">Interests</h2>
         @each(interest in interests)
         <div class="atout-item">
           <div class="atout-title">{{interest.name}}</div>
+          @if(interest.description)
           <div class="atout-desc">{{interest.description}}</div>
+          @endif
         </div>
         @endeach
       </div>
+      @endif
 
+      @if(skills && skills.length)
       <div class="bottom-col">
-        <h2 class="section-title">Competences</h2>
+        <h2 class="section-title">Skills</h2>
         <div class="competence-grid">
           @each(skill in skills)
           <div class="competence-item">
@@ -304,6 +585,7 @@
           @endeach
         </div>
       </div>
+      @endif
     </div>
   </div>
 </body>

@@ -3,13 +3,16 @@ import type { CV } from "../../domain/entities/CV.js";
 export interface MockCVData {
   personalInfo: CV["personalInfo"];
   summary: string;
+  objective: string;
   experiences: CV["experiences"];
   education: CV["education"];
   skills: CV["skills"];
   languages: CV["languages"];
   certifications: CV["certifications"];
   projects: CV["projects"];
+  publications: CV["publications"];
   awards: CV["awards"];
+  volunteer: CV["volunteer"];
   interests: CV["interests"];
   references: CV["references"];
   customSections: CV["customSections"];
@@ -50,6 +53,9 @@ export const mockCVData: MockCVData = {
 
   summary:
     "Experienced software engineer with over 8 years of expertise in full-stack development. Passionate about building scalable applications and mentoring junior developers. Strong background in cloud architecture, microservices, and agile methodologies. Proven track record of delivering high-quality solutions that drive business growth.",
+
+  objective:
+    "Seeking a challenging senior engineering role where I can leverage my expertise in cloud architecture and team leadership to drive innovation and deliver impactful solutions.",
 
   experiences: [
     {
@@ -197,6 +203,19 @@ export const mockCVData: MockCVData = {
     },
   ],
 
+  publications: [
+    {
+      id: "1",
+      title: "Scaling Microservices in Production",
+      authors: ["Alexandre Martin"],
+      publisher: "Tech Blog Weekly",
+      publicationDate: "2023",
+      url: "https://techblog.com/scaling-microservices",
+      description: "A comprehensive guide to scaling microservices architecture",
+      type: "article",
+    },
+  ],
+
   awards: [
     {
       id: "1",
@@ -218,6 +237,18 @@ export const mockCVData: MockCVData = {
       issuer: "Personal Quality",
       date: "2024",
       description: "Strong collaborator and team player",
+    },
+  ],
+
+  volunteer: [
+    {
+      id: "1",
+      organization: "Code for France",
+      role: "Volunteer Developer",
+      startDate: "2020",
+      endDate: "",
+      current: true,
+      description: "Building open-source tools for civic engagement",
     },
   ],
 
