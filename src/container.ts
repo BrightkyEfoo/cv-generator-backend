@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@prisma/client';
 import { PrismaCVRepository, PrismaTemplateRepository, PrismaPaymentRepository, PrismaAdminRepository } from './infrastructure/repositories/index.js';
 import { StripePaymentService, PuppeteerPDFService, LocalFileStorageService, TemplatePreviewGenerator } from './infrastructure/services/index.js';
-import { CreateCVUseCase, UpdateCVUseCase, GetCVUseCase, ExportCVUseCase, GetTemplatesUseCase, CreatePaymentUseCase, HandlePaymentWebhookUseCase, AdminAuthUseCase, ManageTemplatesUseCase } from './application/use-cases/index.js';
+import { CreateCVUseCase, UpdateCVUseCase, GetCVUseCase, ExportCVUseCase, GetTemplatesUseCase, ExportTemplatePreviewUseCase, CreatePaymentUseCase, HandlePaymentWebhookUseCase, AdminAuthUseCase, ManageTemplatesUseCase } from './application/use-cases/index.js';
 import { CVController, TemplateController, PaymentController, UploadController, AdminController } from './presentation/controllers/index.js';
 
 export interface Container {
@@ -37,6 +37,7 @@ export function createContainer(prisma: PrismaClient): Container {
   const getCVUseCase = new GetCVUseCase(cvRepository, templateRepository, previewGenerator);
   const exportCVUseCase = new ExportCVUseCase(cvRepository, pdfService);
   const getTemplatesUseCase = new GetTemplatesUseCase(templateRepository);
+  const exportTemplatePreviewUseCase = new ExportTemplatePreviewUseCase(templateRepository, previewGenerator);
   const createPaymentUseCase = new CreatePaymentUseCase(cvRepository, paymentRepository, paymentService);
   const handlePaymentWebhookUseCase = new HandlePaymentWebhookUseCase(cvRepository, paymentRepository, paymentService);
 
@@ -44,7 +45,7 @@ export function createContainer(prisma: PrismaClient): Container {
   const manageTemplatesUseCase = new ManageTemplatesUseCase(templateRepository, pdfService, './uploads');
 
   const cvController = new CVController(createCVUseCase, updateCVUseCase, getCVUseCase, exportCVUseCase);
-  const templateController = new TemplateController(getTemplatesUseCase);
+  const templateController = new TemplateController(getTemplatesUseCase, exportTemplatePreviewUseCase);
   const paymentController = new PaymentController(createPaymentUseCase, handlePaymentWebhookUseCase);
   const uploadController = new UploadController(fileStorageService);
   const adminController = new AdminController(adminAuthUseCase, manageTemplatesUseCase);

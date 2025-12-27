@@ -17,6 +17,10 @@ export class PDFGeneratorService implements IPDFService {
     return this.generatePDF(cv, { watermark: true, preview: false });
   }
 
+  async generatePreviewImage(_cv: CV): Promise<Buffer> {
+    throw new Error('generatePreviewImage is not implemented in PDFGeneratorService. Use PuppeteerPDFService instead.');
+  }
+
   private async generatePDF(
     cv: CV,
     options: { watermark: boolean; preview: boolean }

@@ -1,10 +1,13 @@
 import type { Request, Response } from 'express';
-import type { GetTemplatesUseCase } from '../../application/use-cases/index.js';
+import type { GetTemplatesUseCase, ExportTemplatePreviewUseCase } from '../../application/use-cases/index.js';
 import type { Template } from '../../domain/entities/index.js';
 import type { TemplateResponseDto } from '../../application/dtos/index.js';
 
 export class TemplateController {
-  constructor(private readonly getTemplatesUseCase: GetTemplatesUseCase) {}
+  constructor(
+    private readonly getTemplatesUseCase: GetTemplatesUseCase,
+    private readonly exportTemplatePreviewUseCase?: ExportTemplatePreviewUseCase
+  ) {}
 
   private toResponseDto(template: Template): TemplateResponseDto {
     return {
@@ -39,5 +42,17 @@ export class TemplateController {
       templates: templates.map(t => this.toResponseDto(t)),
       total: templates.length,
     });
+  }
+
+  async getPreviewImage(req: Request, res: Response): Promise<void> {
+    if (!this.exportTemplatePreviewUseCase) {
+      res.status(501).json({ message: 'Preview generation not available' });
+      return;
+    }
+
+    const image = await this.exportTemplatePreviewUseCase.generatePreviewImage(req.params.id);
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.send(image);
   }
 }
