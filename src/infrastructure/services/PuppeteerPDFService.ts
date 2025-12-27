@@ -66,35 +66,157 @@ export class PuppeteerPDFService implements IPDFService {
       // Add watermark for preview
       html = this.addImageWatermark(html);
 
+      // Add print/page styles for proper pagination with margins
+      const margins = cv.customization.spacing.margins;
+      html = this.addPageStyles(html, margins);
+
       // Set viewport to A4 size (595 x 842 pixels at 72 DPI)
       await page.setViewport({ width: 595, height: 842 });
       await page.setContent(html, { waitUntil: 'networkidle0' });
 
-      // Get the full height of the content
-      const bodyHeight = await page.evaluate(() => {
-        return document.body.scrollHeight;
+      // Generate PDF first, then convert pages to images for accurate pagination
+      const pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        margin: {
+          top: `${margins.top}px`,
+          right: `${margins.right}px`,
+          bottom: `${margins.bottom}px`,
+          left: `${margins.left}px`,
+        },
       });
 
-      // Calculate number of pages (A4 height = 842 pixels)
-      const pageHeight = 842;
-      const pageCount = Math.max(1, Math.ceil(bodyHeight / pageHeight));
-
-      const images: Buffer[] = [];
-
-      // Take screenshot for each page
-      for (let i = 0; i < pageCount; i++) {
-        const screenshot = await page.screenshot({
-          type: 'png',
-          fullPage: false,
-          clip: { x: 0, y: i * pageHeight, width: 595, height: pageHeight },
-        });
-        images.push(Buffer.from(screenshot));
-      }
-
+      // Convert PDF pages to images
+      const images = await this.pdfToImages(Buffer.from(pdfBuffer));
       return images;
     } finally {
       await page.close();
     }
+  }
+
+  private addPageStyles(html: string, margins: { top: number; right: number; bottom: number; left: number }): string {
+    const pageStyles = `
+      <style>
+        @page {
+          size: A4;
+          margin: ${margins.top}px ${margins.right}px ${margins.bottom}px ${margins.left}px;
+        }
+        @media print {
+          body {
+            margin: 0;
+            padding: 0;
+          }
+        }
+        /* Prevent elements from being cut in the middle */
+        .section, .item, .experience-item, .education-item, .skill-category,
+        .certification-item, .project-item, .language-item, .interest-item,
+        .award-item, .volunteer-item, .publication-item, .reference-item {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+        /* Add some breathing room before page breaks */
+        h2, h3 {
+          break-after: avoid;
+          page-break-after: avoid;
+        }
+      </style>
+    `;
+
+    // Insert after <head> or at the beginning if no head
+    if (html.includes('<head>')) {
+      return html.replace('<head>', `<head>${pageStyles}`);
+    } else if (html.includes('<html>')) {
+      return html.replace('<html>', `<html><head>${pageStyles}</head>`);
+    }
+    return pageStyles + html;
+  }
+
+  private async pdfToImages(pdfBuffer: Buffer): Promise<Buffer[]> {
+    const browser = await this.getBrowser();
+    const images: Buffer[] = [];
+
+    try {
+      // Use pdf.js approach via data URL
+      const base64Pdf = pdfBuffer.toString('base64');
+      const page = await browser.newPage();
+
+      try {
+        // Set viewport to A4 size
+        await page.setViewport({ width: 595, height: 842 });
+
+        // Create HTML page that renders PDF using pdf.js
+        const htmlContent = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+            <style>
+              * { margin: 0; padding: 0; }
+              body { background: white; }
+              canvas { display: block; }
+            </style>
+          </head>
+          <body>
+            <canvas id="canvas"></canvas>
+            <script>
+              pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+              window.renderPage = async function(pageNum) {
+                const pdfData = atob('${base64Pdf}');
+                const uint8Array = new Uint8Array(pdfData.length);
+                for (let i = 0; i < pdfData.length; i++) {
+                  uint8Array[i] = pdfData.charCodeAt(i);
+                }
+
+                const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;
+                const page = await pdf.getPage(pageNum);
+
+                const scale = 1.0;
+                const viewport = page.getViewport({ scale });
+
+                const canvas = document.getElementById('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                await page.render({ canvasContext: context, viewport }).promise;
+                return pdf.numPages;
+              };
+            </script>
+          </body>
+          </html>
+        `;
+
+        await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+
+        // Get number of pages and render each
+        const numPages = await page.evaluate(async () => {
+          return await (window as unknown as { renderPage: (n: number) => Promise<number> }).renderPage(1);
+        });
+
+        // Screenshot first page
+        const screenshot1 = await page.screenshot({ type: 'png', fullPage: false });
+        images.push(Buffer.from(screenshot1));
+
+        // Render and screenshot remaining pages
+        for (let i = 2; i <= numPages; i++) {
+          await page.evaluate(async (pageNum: number) => {
+            await (window as unknown as { renderPage: (n: number) => Promise<number> }).renderPage(pageNum);
+          }, i);
+
+          const screenshot = await page.screenshot({ type: 'png', fullPage: false });
+          images.push(Buffer.from(screenshot));
+        }
+      } finally {
+        await page.close();
+      }
+    } catch (error) {
+      console.error('Error converting PDF to images:', error);
+      // Fallback: return empty array or single blank image
+      throw error;
+    }
+
+    return images;
   }
 
   private addImageWatermark(html: string): string {
