@@ -269,7 +269,7 @@
         <div class="skill-item">
           <div class="skill-name">{{ skill.name }}</div>
           <div class="skill-bar">
-            <div class="skill-progress" style="width: 80%"></div>
+            <div class="skill-progress" style="width: {{ skill.level === 'expert' ? '100' : skill.level === 'advanced' ? '80' : skill.level === 'intermediate' ? '60' : skill.level === 'beginner' ? '40' : '50' }}%"></div>
           </div>
         </div>
         @endeach
@@ -280,7 +280,7 @@
         @each(lang in languages)
         <div class="language-item">
           <span>{{ lang.name }}</span>
-          <span>{{ lang.proficiency }}</span>
+          <span>{{ lang.proficiency === 'native' ? 'Langue maternelle' : lang.proficiency === 'fluent' ? 'Courant' : lang.proficiency === 'professional' ? 'Professionnel' : lang.proficiency === 'advanced' ? 'Avancé' : lang.proficiency === 'intermediate' ? 'Intermédiaire' : lang.proficiency === 'conversational' ? 'Conversationnel' : lang.proficiency === 'basic' ? 'Basique' : lang.proficiency === 'beginner' ? 'Débutant' : lang.proficiency }}</span>
         </div>
         @endeach
       </div>

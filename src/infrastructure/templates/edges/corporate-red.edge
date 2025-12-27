@@ -93,6 +93,28 @@
       margin-right: 10px;
     }
 
+    .skill-with-bar {
+      margin-bottom: 12px;
+    }
+
+    .skill-with-bar .skill-name {
+      font-size: 10pt;
+      color: #ffffff;
+      margin-bottom: 5px;
+    }
+
+    .skill-with-bar .skill-bar {
+      height: 4px;
+      background: #5d5d5d;
+      border-radius: 2px;
+    }
+
+    .skill-with-bar .skill-progress {
+      height: 100%;
+      background: {{colors.primary}};
+      border-radius: 2px;
+    }
+
     .reference-item {
       margin-bottom: 15px;
     }
@@ -231,7 +253,12 @@
       <div class="sidebar-section">
         <h2 class="sidebar-section-title">Skills</h2>
         @each(skill in skills)
-        <div class="skill-item">{{skill.name}}</div>
+        <div class="skill-with-bar">
+          <div class="skill-name">{{skill.name}}</div>
+          <div class="skill-bar">
+            <div class="skill-progress" style="width: {{ skill.level === 'expert' ? '100' : skill.level === 'advanced' ? '80' : skill.level === 'intermediate' ? '60' : skill.level === 'beginner' ? '40' : '50' }}%"></div>
+          </div>
+        </div>
         @endeach
       </div>
 
@@ -239,7 +266,7 @@
       <div class="sidebar-section">
         <h2 class="sidebar-section-title">Languages</h2>
         @each(lang in languages)
-        <div class="skill-item">{{lang.name}} - {{lang.proficiency}}</div>
+        <div class="skill-item">{{lang.name}} - {{ lang.proficiency === 'native' ? 'Langue maternelle' : lang.proficiency === 'fluent' ? 'Courant' : lang.proficiency === 'professional' ? 'Professionnel' : lang.proficiency === 'advanced' ? 'Avancé' : lang.proficiency === 'intermediate' ? 'Intermédiaire' : lang.proficiency === 'conversational' ? 'Conversationnel' : lang.proficiency === 'basic' ? 'Basique' : lang.proficiency === 'beginner' ? 'Débutant' : lang.proficiency }}</div>
         @endeach
       </div>
       @endif

@@ -336,14 +336,20 @@
     .competence-item {
       width: 80px;
       height: 80px;
-      border: 2px solid {{colors.primary}};
       border-radius: 50%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
+      position: relative;
     }
+
+    .competence-item.expert { border: 4px solid {{colors.primary}}; }
+    .competence-item.advanced { border: 3px solid {{colors.primary}}; }
+    .competence-item.intermediate { border: 2px solid {{colors.primary}}; }
+    .competence-item.beginner { border: 2px dashed {{colors.primary}}; }
+    .competence-item.default { border: 2px solid {{colors.primary}}; }
 
     .competence-name {
       font-size: 8pt;
@@ -354,6 +360,12 @@
     .competence-sub {
       font-size: 7pt;
       color: #8899aa;
+    }
+
+    .competence-level {
+      font-size: 6pt;
+      color: {{colors.primary}};
+      margin-top: 2px;
     }
   </style>
 </head>
@@ -439,7 +451,7 @@
         @each(lang in languages)
         <div class="lang-item">
           <span>{{lang.name}}</span>
-          <span class="lang-level">{{lang.proficiency}}</span>
+          <span class="lang-level">{{ lang.proficiency === 'native' ? 'Langue maternelle' : lang.proficiency === 'fluent' ? 'Courant' : lang.proficiency === 'professional' ? 'Professionnel' : lang.proficiency === 'advanced' ? 'Avancé' : lang.proficiency === 'intermediate' ? 'Intermédiaire' : lang.proficiency === 'conversational' ? 'Conversationnel' : lang.proficiency === 'basic' ? 'Basique' : lang.proficiency === 'beginner' ? 'Débutant' : lang.proficiency }}</span>
         </div>
         @endeach
       </div>
@@ -576,11 +588,9 @@
         <h2 class="section-title">Skills</h2>
         <div class="competence-grid">
           @each(skill in skills)
-          <div class="competence-item">
+          <div class="competence-item {{ skill.level === 'expert' ? 'expert' : skill.level === 'advanced' ? 'advanced' : skill.level === 'intermediate' ? 'intermediate' : skill.level === 'beginner' ? 'beginner' : 'default' }}">
             <span class="competence-name">{{skill.name}}</span>
-            @if(skill.category)
-            <span class="competence-sub">{{skill.category}}</span>
-            @endif
+            <span class="competence-level">{{ skill.level === 'expert' ? 'Expert' : skill.level === 'advanced' ? 'Avancé' : skill.level === 'intermediate' ? 'Inter.' : skill.level === 'beginner' ? 'Débutant' : '' }}</span>
           </div>
           @endeach
         </div>

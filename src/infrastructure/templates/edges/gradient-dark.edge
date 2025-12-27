@@ -98,11 +98,33 @@
     }
 
     .skill-tag {
-      border: 1px solid {{ colors.primary }};
       border-radius: 20px;
       padding: 8px 15px;
       font-size: 9pt;
       color: #ffffff;
+    }
+
+    .skill-tag.expert {
+      background: {{ colors.primary }};
+      border: 2px solid {{ colors.primary }};
+    }
+
+    .skill-tag.advanced {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid {{ colors.primary }};
+    }
+
+    .skill-tag.intermediate {
+      border: 1px solid {{ colors.primary }};
+    }
+
+    .skill-tag.beginner {
+      border: 1px dashed {{ colors.primary }};
+      opacity: 0.8;
+    }
+
+    .skill-tag.default {
+      border: 1px solid {{ colors.primary }};
     }
 
     .education-item {
@@ -407,7 +429,7 @@
         <h2 class="section-title">Skills</h2>
         <div class="skill-grid">
           @each(skill in skills)
-          <span class="skill-tag">{{ skill.name }}</span>
+          <span class="skill-tag {{ skill.level === 'expert' ? 'expert' : skill.level === 'advanced' ? 'advanced' : skill.level === 'intermediate' ? 'intermediate' : skill.level === 'beginner' ? 'beginner' : 'default' }}">{{ skill.name }}</span>
           @endeach
         </div>
       </div>
@@ -435,7 +457,7 @@
         @each(lang in languages)
         <div class="lang-item">
           <span>{{ lang.name }}</span>
-          <span class="lang-level">{{ lang.proficiency }}</span>
+          <span class="lang-level">{{ lang.proficiency === 'native' ? 'Langue maternelle' : lang.proficiency === 'fluent' ? 'Courant' : lang.proficiency === 'professional' ? 'Professionnel' : lang.proficiency === 'advanced' ? 'Avancé' : lang.proficiency === 'intermediate' ? 'Intermédiaire' : lang.proficiency === 'conversational' ? 'Conversationnel' : lang.proficiency === 'basic' ? 'Basique' : lang.proficiency === 'beginner' ? 'Débutant' : lang.proficiency }}</span>
         </div>
         @endeach
       </div>

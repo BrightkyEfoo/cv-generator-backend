@@ -87,15 +87,28 @@
     .software-item {
       width: 70px;
       height: 70px;
-      border: 3px solid {{ colors.primary }};
       border-radius: 50%;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       font-size: 8pt;
       font-weight: 600;
       color: #333;
       position: relative;
+      text-align: center;
+    }
+
+    .software-item.expert { border: 4px solid {{ colors.primary }}; background: rgba(255,165,0,0.1); }
+    .software-item.advanced { border: 3px solid {{ colors.primary }}; }
+    .software-item.intermediate { border: 2px solid {{ colors.primary }}; }
+    .software-item.beginner { border: 2px dashed {{ colors.primary }}; }
+    .software-item.default { border: 3px solid {{ colors.primary }}; }
+
+    .software-item .skill-level-text {
+      font-size: 6pt;
+      color: {{ colors.primary }};
+      margin-top: 2px;
     }
 
     .software-item:nth-child(2) {
@@ -444,7 +457,10 @@
         <h2 class="sidebar-title">Skills</h2>
         <div class="software-container">
           @each(skill in skills.slice(0, 4))
-          <div class="software-item">{{ skill.name }}</div>
+          <div class="software-item {{ skill.level === 'expert' ? 'expert' : skill.level === 'advanced' ? 'advanced' : skill.level === 'intermediate' ? 'intermediate' : skill.level === 'beginner' ? 'beginner' : 'default' }}">
+            <span>{{ skill.name }}</span>
+            <span class="skill-level-text">{{ skill.level === 'expert' ? 'Expert' : skill.level === 'advanced' ? 'Avancé' : skill.level === 'intermediate' ? 'Inter.' : skill.level === 'beginner' ? 'Débutant' : '' }}</span>
+          </div>
           @endeach
         </div>
       </div>
@@ -457,10 +473,10 @@
         <div class="language-item">
           <div class="language-header">
             <span class="language-name">{{ lang.name }}</span>
-            <span class="language-level">{{ lang.proficiency }}</span>
+            <span class="language-level">{{ lang.proficiency === 'native' ? 'Langue maternelle' : lang.proficiency === 'fluent' ? 'Courant' : lang.proficiency === 'professional' ? 'Professionnel' : lang.proficiency === 'advanced' ? 'Avancé' : lang.proficiency === 'intermediate' ? 'Intermédiaire' : lang.proficiency === 'conversational' ? 'Conversationnel' : lang.proficiency === 'basic' ? 'Basique' : lang.proficiency === 'beginner' ? 'Débutant' : lang.proficiency }}</span>
           </div>
           <div class="language-bar">
-            <div class="language-progress" style="width: @if(lang.proficiency === 'native')100%@elseif(lang.proficiency === 'fluent')90%@elseif(lang.proficiency === 'advanced')75%@elseif(lang.proficiency === 'intermediate')50%@else25%@endif"></div>
+            <div class="language-progress" style="width: @if(lang.proficiency === 'native')100%@elseif(lang.proficiency === 'fluent')90%@elseif(lang.proficiency === 'advanced' || lang.proficiency === 'professional')75%@elseif(lang.proficiency === 'intermediate' || lang.proficiency === 'conversational')50%@else25%@endif"></div>
           </div>
         </div>
         @endeach

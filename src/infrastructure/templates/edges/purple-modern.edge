@@ -516,7 +516,7 @@
         @each(lang in languages)
         <div class="lang-item">
           <span>{{lang.name}}</span>
-          <span class="lang-level">{{lang.proficiency}}</span>
+          <span class="lang-level">{{ lang.proficiency === 'native' ? 'Langue maternelle' : lang.proficiency === 'fluent' ? 'Courant' : lang.proficiency === 'professional' ? 'Professionnel' : lang.proficiency === 'advanced' ? 'Avancé' : lang.proficiency === 'intermediate' ? 'Intermédiaire' : lang.proficiency === 'conversational' ? 'Conversationnel' : lang.proficiency === 'basic' ? 'Basique' : lang.proficiency === 'beginner' ? 'Débutant' : lang.proficiency }}</span>
         </div>
         @endeach
       </div>
