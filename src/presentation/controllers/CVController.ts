@@ -199,6 +199,18 @@ export class CVController {
     res.send(image);
   }
 
+  async previewImages(req: Request, res: Response): Promise<void> {
+    const images = await this.exportCVUseCase.generatePreviewImages(req.params.id);
+    // Convert buffers to base64 strings for JSON response
+    const imagesBase64 = images.map(buffer => buffer.toString('base64'));
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.json({
+      pageCount: images.length,
+      images: imagesBase64
+    });
+  }
+
   async download(req: Request, res: Response): Promise<void> {
     const pdf = await this.exportCVUseCase.generateDownload(req.params.id);
     res.setHeader('Content-Type', 'application/pdf');

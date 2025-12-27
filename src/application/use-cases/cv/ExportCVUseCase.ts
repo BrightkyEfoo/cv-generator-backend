@@ -24,6 +24,14 @@ export class ExportCVUseCase {
     return this.pdfService.generatePreviewImage(cv);
   }
 
+  async generatePreviewImages(cvId: string): Promise<Buffer[]> {
+    const cv = await this.cvRepository.findById(cvId);
+    if (!cv) {
+      throw new NotFoundError('CV', cvId);
+    }
+    return this.pdfService.generatePreviewImages(cv);
+  }
+
   async generateDownload(cvId: string): Promise<Buffer> {
     const cv = await this.cvRepository.findById(cvId);
     if (!cv) {

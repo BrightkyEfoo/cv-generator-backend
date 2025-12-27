@@ -43,6 +43,11 @@ export class PuppeteerPDFService implements IPDFService {
   }
 
   async generatePreviewImage(cv: CV): Promise<Buffer> {
+    const images = await this.generatePreviewImages(cv);
+    return images[0];
+  }
+
+  async generatePreviewImages(cv: CV): Promise<Buffer[]> {
     const browser = await this.getBrowser();
     const page = await browser.newPage();
 
@@ -65,13 +70,28 @@ export class PuppeteerPDFService implements IPDFService {
       await page.setViewport({ width: 595, height: 842 });
       await page.setContent(html, { waitUntil: 'networkidle0' });
 
-      const screenshot = await page.screenshot({
-        type: 'png',
-        fullPage: false,
-        clip: { x: 0, y: 0, width: 595, height: 842 },
+      // Get the full height of the content
+      const bodyHeight = await page.evaluate(() => {
+        return document.body.scrollHeight;
       });
 
-      return Buffer.from(screenshot);
+      // Calculate number of pages (A4 height = 842 pixels)
+      const pageHeight = 842;
+      const pageCount = Math.max(1, Math.ceil(bodyHeight / pageHeight));
+
+      const images: Buffer[] = [];
+
+      // Take screenshot for each page
+      for (let i = 0; i < pageCount; i++) {
+        const screenshot = await page.screenshot({
+          type: 'png',
+          fullPage: false,
+          clip: { x: 0, y: i * pageHeight, width: 595, height: pageHeight },
+        });
+        images.push(Buffer.from(screenshot));
+      }
+
+      return images;
     } finally {
       await page.close();
     }

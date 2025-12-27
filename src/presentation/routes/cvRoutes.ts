@@ -11,6 +11,7 @@ export function createCVRoutes(controller: CVController): Router {
   // Specific routes must come before :id to avoid being caught by the catch-all
   router.get('/:id/preview', asyncHandler((req, res) => controller.preview(req, res)));
   router.get('/:id/preview-image', asyncHandler((req, res) => controller.previewImage(req, res)));
+  router.get('/:id/preview-images', asyncHandler((req, res) => controller.previewImages(req, res)));
   router.get('/:id/download', asyncHandler((req, res) => controller.download(req, res)));
 
   router.patch('/:id/personal-info', asyncHandler((req, res) => controller.updatePersonalInfo(req, res)));

@@ -10,4 +10,5 @@ export interface IPDFService {
   generateFull(cv: CV): Promise<Buffer>;
   generateWithWatermark(cv: CV): Promise<Buffer>;
   generatePreviewImage(cv: CV): Promise<Buffer>;
+  generatePreviewImages(cv: CV): Promise<Buffer[]>;
 }
