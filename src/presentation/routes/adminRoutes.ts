@@ -60,5 +60,36 @@ export function createAdminRoutes(
     asyncHandler((req, res) => controller.updateSettings(req, res))
   );
 
+  // Personal CV Management (Admin's own CV with Bright OS template)
+  router.get(
+    '/my-cv',
+    requireAuth(['superadmin', 'admin']),
+    asyncHandler((req, res) => controller.getPersonalCV(req, res))
+  );
+
+  router.post(
+    '/my-cv',
+    requireAuth(['superadmin', 'admin']),
+    asyncHandler((req, res) => controller.createPersonalCV(req, res))
+  );
+
+  router.patch(
+    '/my-cv',
+    requireAuth(['superadmin', 'admin']),
+    asyncHandler((req, res) => controller.updatePersonalCV(req, res))
+  );
+
+  router.patch(
+    '/my-cv/:section',
+    requireAuth(['superadmin', 'admin']),
+    asyncHandler((req, res) => controller.updatePersonalCVSection(req, res))
+  );
+
+  router.get(
+    '/my-cv/download',
+    requireAuth(['superadmin', 'admin']),
+    asyncHandler((req, res) => controller.downloadPersonalCV(req, res))
+  );
+
   return router;
 }

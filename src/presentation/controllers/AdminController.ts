@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import type { AdminAuthUseCase, ManageTemplatesUseCase, GetTemplatesUseCase, ManageSettingsUseCase } from '../../application/use-cases/index.js';
+import type { AdminAuthUseCase, ManageTemplatesUseCase, GetTemplatesUseCase, ManageSettingsUseCase, ManagePersonalCVUseCase, ExportCVUseCase } from '../../application/use-cases/index.js';
 import type { ICVRepository } from '../../domain/interfaces/index.js';
 import type { Template } from '../../domain/entities/index.js';
 import type { TemplateResponseDto } from '../../application/dtos/index.js';
@@ -10,7 +10,9 @@ export class AdminController {
     private readonly manageTemplatesUseCase: ManageTemplatesUseCase,
     private readonly getTemplatesUseCase?: GetTemplatesUseCase,
     private readonly cvRepository?: ICVRepository,
-    private readonly manageSettingsUseCase?: ManageSettingsUseCase
+    private readonly manageSettingsUseCase?: ManageSettingsUseCase,
+    private readonly managePersonalCVUseCase?: ManagePersonalCVUseCase,
+    private readonly exportCVUseCase?: ExportCVUseCase
   ) {}
 
   private toTemplateDto(template: Template): TemplateResponseDto {
@@ -92,5 +94,81 @@ export class AdminController {
     const adminId = (req as Request & { adminId: string }).adminId;
     const settings = await this.manageSettingsUseCase.updateSettings(req.body, adminId);
     res.json(settings);
+  }
+
+  // Personal CV Management
+  async getPersonalCV(req: Request, res: Response): Promise<void> {
+    if (!this.managePersonalCVUseCase) {
+      res.status(500).json({ error: 'Personal CV use case not configured' });
+      return;
+    }
+    let cv = await this.managePersonalCVUseCase.getPersonalCV();
+    if (!cv) {
+      // Auto-create the personal CV if it doesn't exist
+      cv = await this.managePersonalCVUseCase.createOrUpdatePersonalCV();
+    }
+    res.json(cv);
+  }
+
+  async createPersonalCV(req: Request, res: Response): Promise<void> {
+    if (!this.managePersonalCVUseCase) {
+      res.status(500).json({ error: 'Personal CV use case not configured' });
+      return;
+    }
+    const cv = await this.managePersonalCVUseCase.createOrUpdatePersonalCV(req.body);
+    res.status(201).json(cv);
+  }
+
+  async updatePersonalCV(req: Request, res: Response): Promise<void> {
+    if (!this.managePersonalCVUseCase) {
+      res.status(500).json({ error: 'Personal CV use case not configured' });
+      return;
+    }
+    const cv = await this.managePersonalCVUseCase.createOrUpdatePersonalCV(req.body);
+    res.json(cv);
+  }
+
+  async updatePersonalCVSection(req: Request, res: Response): Promise<void> {
+    if (!this.managePersonalCVUseCase) {
+      res.status(500).json({ error: 'Personal CV use case not configured' });
+      return;
+    }
+    const section = req.params.section;
+    const validSections = ['personalInfo', 'summary', 'objective', 'experiences', 'education', 'skills', 'languages', 'certifications', 'projects', 'publications', 'awards', 'volunteer', 'interests', 'references', 'customSections', 'customization'];
+    if (!validSections.includes(section)) {
+      res.status(400).json({ error: `Invalid section: ${section}` });
+      return;
+    }
+    const cv = await this.managePersonalCVUseCase.updateSection(section as keyof import('../../domain/entities/index.js').CV, req.body);
+    res.json(cv);
+  }
+
+  async downloadPersonalCV(req: Request, res: Response): Promise<void> {
+    if (!this.managePersonalCVUseCase || !this.exportCVUseCase) {
+      res.status(500).json({ error: 'Personal CV or Export use case not configured' });
+      return;
+    }
+
+    let cv = await this.managePersonalCVUseCase.getPersonalCV();
+    if (!cv) {
+      cv = await this.managePersonalCVUseCase.createOrUpdatePersonalCV();
+    }
+
+    const format = (req.query.format as string) || 'pdf';
+    const result = await this.exportCVUseCase.execute({
+      cvId: cv.id,
+      format: format as 'pdf' | 'png',
+      skipPaymentCheck: true, // Admin can always download
+    });
+
+    if (format === 'pdf') {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="CV-Brightman-EFOO.pdf"`);
+    } else {
+      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Content-Disposition', `attachment; filename="CV-Brightman-EFOO.png"`);
+    }
+
+    res.send(result.data);
   }
 }

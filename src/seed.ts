@@ -206,6 +206,27 @@ const templateConfigs: TemplateConfig[] = [
     },
     availableFonts: ['Segoe UI', 'Arial', 'Open Sans'],
   },
+  {
+    fileName: 'bright-os',
+    name: 'Bright OS',
+    description: 'Unique OS-style window design with blue/purple theme, perfect for developers and tech professionals',
+    category: 'creative',
+    features: {
+      hasPhoto: true,
+      hasSidebar: false,
+      hasColorCustomization: true,
+      hasFontCustomization: true,
+      maxSections: 15,
+    },
+    defaultColors: {
+      primary: '#5B6AE8',
+      secondary: '#D5D9FF',
+      background: '#F0F2FF',
+      text: '#1a1a2e',
+      headings: '#1a1a2e',
+    },
+    availableFonts: ['Inter', 'JetBrains Mono', 'Segoe UI', 'Roboto'],
+  },
 ];
 
 function loadEdgeCode(fileName: string): string {
@@ -275,9 +296,14 @@ async function seedAdmin() {
     .update(adminPassword + jwtSecret)
     .digest('hex');
 
+  console.log(`  Using JWT secret: ${jwtSecret.substring(0, 10)}...`);
+
   await prisma.adminUser.upsert({
     where: { email: 'admin@cvgenerator.com' },
-    update: {},
+    update: {
+      // Always update password hash to match current secret
+      passwordHash,
+    },
     create: {
       email: 'admin@cvgenerator.com',
       passwordHash,
@@ -287,7 +313,7 @@ async function seedAdmin() {
     },
   });
 
-  console.log('  Created admin user: admin@cvgenerator.com');
+  console.log('  Created/Updated admin user: admin@cvgenerator.com');
 }
 
 async function generatePreviews() {

@@ -55,16 +55,18 @@ export class ExportCVUseCase {
     return this.pdfService.generatePreviewImages(cv);
   }
 
-  async generateDownload(cvId: string): Promise<Buffer> {
+  async generateDownload(cvId: string, skipPaymentCheck = false): Promise<Buffer> {
     const cv = await this.cvRepository.findById(cvId);
     if (!cv) {
       throw new NotFoundError('CV', cvId);
     }
 
-    // Check payment unless free downloads are enabled
-    const freeDownloads = await this.isFreeDownloadsEnabled();
-    if (!freeDownloads && !cv.isPaid) {
-      throw new PaymentRequiredError('Payment required to download CV without watermark');
+    // Check payment unless free downloads are enabled or skipPaymentCheck is true (admin)
+    if (!skipPaymentCheck) {
+      const freeDownloads = await this.isFreeDownloadsEnabled();
+      if (!freeDownloads && !cv.isPaid) {
+        throw new PaymentRequiredError('Payment required to download CV without watermark');
+      }
     }
 
     const pdf = await this.pdfService.generateFull(cv);
@@ -81,6 +83,18 @@ export class ExportCVUseCase {
     });
 
     return pdf;
+  }
+
+  async execute(params: { cvId: string; format?: 'pdf' | 'png'; skipPaymentCheck?: boolean }): Promise<{ data: Buffer; contentType: string }> {
+    const { cvId, format = 'pdf', skipPaymentCheck = false } = params;
+
+    if (format === 'png') {
+      const data = await this.generatePreviewImage(cvId);
+      return { data, contentType: 'image/png' };
+    }
+
+    const data = await this.generateDownload(cvId, skipPaymentCheck);
+    return { data, contentType: 'application/pdf' };
   }
 
   private async saveCVExport(cv: { personalInfo: { firstName: string; lastName: string } }, pdf: Buffer): Promise<void> {

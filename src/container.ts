@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@prisma/client';
 import { PrismaCVRepository, PrismaTemplateRepository, PrismaPaymentRepository, PrismaAdminRepository, PrismaAppSettingsRepository } from './infrastructure/repositories/index.js';
 import { StripePaymentService, PuppeteerPDFService, LocalFileStorageService, TemplatePreviewGenerator } from './infrastructure/services/index.js';
-import { CreateCVUseCase, UpdateCVUseCase, GetCVUseCase, ExportCVUseCase, GetTemplatesUseCase, ExportTemplatePreviewUseCase, CreatePaymentUseCase, HandlePaymentWebhookUseCase, AdminAuthUseCase, ManageTemplatesUseCase, ManageSettingsUseCase } from './application/use-cases/index.js';
+import { CreateCVUseCase, UpdateCVUseCase, GetCVUseCase, ExportCVUseCase, GetTemplatesUseCase, ExportTemplatePreviewUseCase, CreatePaymentUseCase, HandlePaymentWebhookUseCase, AdminAuthUseCase, ManageTemplatesUseCase, ManageSettingsUseCase, ManagePersonalCVUseCase } from './application/use-cases/index.js';
 import { CVController, TemplateController, PaymentController, UploadController, AdminController } from './presentation/controllers/index.js';
 
 export interface Container {
@@ -46,12 +46,13 @@ export function createContainer(prisma: PrismaClient): Container {
   const adminAuthUseCase = new AdminAuthUseCase(adminRepository, jwtSecret);
   const manageTemplatesUseCase = new ManageTemplatesUseCase(templateRepository, pdfService, './uploads');
   const manageSettingsUseCase = new ManageSettingsUseCase(appSettingsRepository);
+  const managePersonalCVUseCase = new ManagePersonalCVUseCase(cvRepository, templateRepository);
 
   const cvController = new CVController(createCVUseCase, updateCVUseCase, getCVUseCase, exportCVUseCase);
   const templateController = new TemplateController(getTemplatesUseCase, exportTemplatePreviewUseCase);
   const paymentController = new PaymentController(createPaymentUseCase, handlePaymentWebhookUseCase);
   const uploadController = new UploadController(fileStorageService);
-  const adminController = new AdminController(adminAuthUseCase, manageTemplatesUseCase, getTemplatesUseCase, cvRepository, manageSettingsUseCase);
+  const adminController = new AdminController(adminAuthUseCase, manageTemplatesUseCase, getTemplatesUseCase, cvRepository, manageSettingsUseCase, managePersonalCVUseCase, exportCVUseCase);
 
   return {
     cvController,

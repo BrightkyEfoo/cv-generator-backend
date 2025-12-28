@@ -1,4 +1,4 @@
-export { CreateCVUseCase, UpdateCVUseCase, GetCVUseCase, ExportCVUseCase } from './cv/index.js';
+export { CreateCVUseCase, UpdateCVUseCase, GetCVUseCase, ExportCVUseCase, ManagePersonalCVUseCase } from './cv/index.js';
 export { GetTemplatesUseCase, ExportTemplatePreviewUseCase } from './template/index.js';
 export { CreatePaymentUseCase, HandlePaymentWebhookUseCase } from './payment/index.js';
 export { AdminAuthUseCase, ManageTemplatesUseCase } from './admin/index.js';
