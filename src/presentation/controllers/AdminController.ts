@@ -77,6 +77,33 @@ export class AdminController {
     res.json(cvs);
   }
 
+  async getCV(req: Request, res: Response): Promise<void> {
+    if (!this.cvRepository) {
+      res.status(500).json({ error: 'CV repository not configured' });
+      return;
+    }
+    const cv = await this.cvRepository.findById(req.params.id);
+    if (!cv) {
+      res.status(404).json({ error: 'CV not found' });
+      return;
+    }
+    res.json(cv);
+  }
+
+  async deleteCV(req: Request, res: Response): Promise<void> {
+    if (!this.cvRepository) {
+      res.status(500).json({ error: 'CV repository not configured' });
+      return;
+    }
+    const cv = await this.cvRepository.findById(req.params.id);
+    if (!cv) {
+      res.status(404).json({ error: 'CV not found' });
+      return;
+    }
+    await this.cvRepository.delete(req.params.id);
+    res.status(204).send();
+  }
+
   async getSettings(req: Request, res: Response): Promise<void> {
     if (!this.manageSettingsUseCase) {
       res.status(500).json({ error: 'Settings use case not configured' });

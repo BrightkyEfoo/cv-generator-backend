@@ -49,6 +49,18 @@ export function createAdminRoutes(
   );
 
   router.get(
+    '/cvs/:id',
+    requireAuth(['superadmin', 'admin']),
+    asyncHandler((req, res) => controller.getCV(req, res))
+  );
+
+  router.delete(
+    '/cvs/:id',
+    requireAuth(['superadmin', 'admin']),
+    asyncHandler((req, res) => controller.deleteCV(req, res))
+  );
+
+  router.get(
     '/settings',
     requireAuth(['superadmin', 'admin']),
     asyncHandler((req, res) => controller.getSettings(req, res))
