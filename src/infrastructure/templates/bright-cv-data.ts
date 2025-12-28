@@ -264,6 +264,16 @@ export const brightCVData: BrightCVData = {
       startDate: "2022",
       endDate: "",
     },
+    {
+      id: "6",
+      name: "CV Generator",
+      description:
+        "Plateforme SaaS de création de CV professionnels avec templates personnalisables, génération PDF, et dashboard admin. Architecture Clean avec backend Express.js/TypeScript et frontend Next.js.",
+      url: "https://cv-generator.brightkyefoo.cm/",
+      technologies: ["Next.js", "Express.js", "TypeScript", "Prisma", "PostgreSQL", "Puppeteer", "TailwindCSS"],
+      startDate: "2024",
+      endDate: "",
+    },
   ],
 
   publications: [],
