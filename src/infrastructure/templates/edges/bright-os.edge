@@ -569,8 +569,12 @@
           <h1>{{personalInfo.firstName}} {{personalInfo.lastName}}</h1>
           <div class="subtitle">{{personalInfo.title}}</div>
           <div class="contact-info">
-            @if(personalInfo.phone){{personalInfo.phone}}<br>@endif
-            @if(personalInfo.email){{personalInfo.email}}<br>@endif
+            @if(personalInfo.phone)
+            {{personalInfo.phone}}<br>
+            @endif
+            @if(personalInfo.email)
+            {{personalInfo.email}}<br>
+            @endif
             @each(link in personalInfo.socialLinks)
             <a href="{{link.url}}">{{link.url}}</a><br>
             @endeach
