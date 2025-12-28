@@ -66,8 +66,8 @@ RUN npx prisma generate
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/src/infrastructure/templates ./src/infrastructure/templates
 
-# Create directories for uploads and previews
-RUN mkdir -p uploads public/previews && \
+# Create directories for uploads, previews, and cv-exports
+RUN mkdir -p uploads public/previews cv-exports && \
     chown -R nodejs:nodejs /app
 
 # Switch to non-root user
