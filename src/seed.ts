@@ -227,6 +227,27 @@ const templateConfigs: TemplateConfig[] = [
     },
     availableFonts: ['Inter', 'JetBrains Mono', 'Segoe UI', 'Roboto'],
   },
+  {
+    fileName: 'sidebar-modern',
+    name: 'Sidebar Modern',
+    description: 'Design moderne avec sidebar grise, barres de compétences et accents cyan, idéal pour développeurs',
+    category: 'modern',
+    features: {
+      hasPhoto: true,
+      hasSidebar: true,
+      hasColorCustomization: true,
+      hasFontCustomization: true,
+      maxSections: 15,
+    },
+    defaultColors: {
+      primary: '#00B4D8',
+      secondary: '#f5f5f5',
+      background: '#ffffff',
+      text: '#333333',
+      headings: '#1a1a1a',
+    },
+    availableFonts: ['Segoe UI', 'Roboto', 'Arial', 'Open Sans'],
+  },
 ];
 
 function loadEdgeCode(fileName: string): string {
